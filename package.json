@@ -1,26 +1,20 @@
 {
-  "name": "hungergains",
+  "name": "nodejs-api-skeleton",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/johnsourour/HungerGains.git"
-  },
-  "keywords": [
-    "H"
-  ],
-  "author": "John Sourour",
+  "author": "Ali Khaled",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/johnsourour/HungerGains/issues"
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   },
-  "homepage": "https://github.com/johnsourour/HungerGains#readme",
   "dependencies": {
-    "git": "^0.1.5",
-    "mysql": "^2.16.0"
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.1"
   }
 }
