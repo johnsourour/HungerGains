@@ -1,4 +1,4 @@
-# nodejs api skeleton
+# Hunger Gains Online Ordering Service - NodeJS/MySQL
 after cloning 
 
 ```
