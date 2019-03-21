@@ -7,7 +7,7 @@ router.use(bodyParser.json());
 
 
 // Sample Post request
-router.post('/mypostapi', function (req, res) {
+router.post('/', function (req, res) {
   console.log("got post request"); 
   var date = new Date();
   var sql = "your raw sql query here"
@@ -22,16 +22,16 @@ router.post('/mypostapi', function (req, res) {
   });
   
 
-router.get('/mygetapi', function (req, res) {
+router.get('/', function (req, res) {
   console.log("got get request"); 
-  let sql = "your raw sql query here"
+  let sql = "your raw sql query here";
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+   
     if(err){
       res.send(err);
     } else {
-    //your code here 
-    //you can use res.json(result); to send all data as a response 
+     
+     res.json(result);  
     }
   });
 });
