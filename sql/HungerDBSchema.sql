@@ -4,7 +4,7 @@ DROP TABLE IF EXISTS OrderStatus;
 DROP TABLE IF EXISTS Log;
 DROP TABLE IF EXISTS LogType;
 DROP TABLE IF EXISTS User;
-DROP TABLE IF EXISTS UserType;
+DROP TABLE IF EXISTS UserCat;
 DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS RestaurantDeliveryArea;
 DROP TABLE IF EXISTS Restaurant;
@@ -19,30 +19,28 @@ DROP TABLE IF EXISTS MenuItem;
 DROP TABLE IF EXISTS ItemConfiguration;
 DROP TABLE IF EXISTS DeliveryArea;
 
-CREATE TABLE UserType (
+
+
+CREATE TABLE UserCat (
   userType CHAR(20),
   description CHAR(60),
   CONSTRAINT usertype_pk PRIMARY KEY(userType)
   );
-  
+
 CREATE TABLE User (
   username  CHAR(20),
   userType  CHAR(20),
-  phoneNo     CHAR(11),
+  phoneNo     CHAR(11) NOT NULL,
   addressLine1    CHAR(40),
   addressLine2    CHAR(40),
-  email     CHAR(40),
-  Fname     CHAR(15),
-  Lname     CHAR(15),
-  hashedPwd CHAR(70),
+  email     CHAR(40) NOT NULL,
+  Fname     CHAR(15) NOT NULL,
+  Lname     CHAR(15) NOT NULL,
+  hashedPwd CHAR(70) NOT NULL,
   Bdate Date, 
-  CONSTRAINT usertype_fk FOREIGN KEY(userType) REFERENCES UserType(userType),
   CONSTRAINT user_pk PRIMARY KEY(username, userType),
-  CONSTRAINT user_Fname_nn CHECK (Fname is NOT NULL),
-  CONSTRAINT user_Lname_nn CHECK (Lname is NOT NULL),
-  CONSTRAINT user_pwd_nn CHECK (hashedPwd is NOT NULL),
-  CONSTRAINT user_email_nn CHECK (email is NOT NULL),
-  CONSTRAINT user_phone_nn CHECK (phoneNo is NOT NULL)
+  CONSTRAINT usertype_fk FOREIGN KEY(userType) REFERENCES UserCat(userType),
+  UNIQUE KEY(username)
   );
   
 CREATE TABLE LogType (
@@ -67,9 +65,8 @@ CREATE TABLE Log (
 CREATE TABLE Discount (
 	discountID INT,
     expiryDate Date, 
-    rate FLOAT,
-    CONSTRAINT discount_pk PRIMARY KEY(discountID),
-    CONSTRAINT rate_chk CHECK(rate>=0 and rate<=1)
+    rate INT,
+    CONSTRAINT discount_pk PRIMARY KEY(discountID)
 );
 
 CREATE TABLE Cuisine (
@@ -79,15 +76,12 @@ CREATE TABLE Cuisine (
 
 CREATE TABLE Restaurant (
 	restaurantID INT,
-    restaurantName CHAR(25),
-    cuisine CHAR(20), 
+    restaurantName CHAR(25) UNIQUE NOT NULL,
+    cuisine CHAR(20) NOT NULL, 
     deliveryFee FLOAT,
-    taxPercent FLOAT,
+    taxPercent FLOAT CHECK(taxPercent>=0 and taxPercent<=1),
     CONSTRAINT restaurant_pk PRIMARY KEY(restaurantID),
-    CONSTRAINT cuisine_fk FOREIGN KEY(cuisine) REFERENCES Cuisine(cuisineName),  
-    CONSTRAINT cuisine_nn CHECK (cuisine is NOT NULL),  
-    CONSTRAINT rname_nn CHECK (restaurantName is NOT NULL),  
-    CONSTRAINT tax_chk CHECK(taxPercent>=0 and taxPercent<=1)
+    CONSTRAINT cuisine_fk FOREIGN KEY(cuisine) REFERENCES Cuisine(cuisineName)
 );
 
 
@@ -99,13 +93,10 @@ CREATE TABLE Day (
 CREATE TABLE WorkingHour (
     wday CHAR(10),
 	restaurantID INT,
-    startHour TIME,
-    endHour TIME,
+    startHour TIME NOT NULL,
+    endHour TIME NOT NULL,
     CONSTRAINT wday_pk PRIMARY KEY(wday, restaurantID),
-    CONSTRAINT wday_fk FOREIGN KEY(wday) REFERENCES Day(dayName),  
-    CONSTRAINT shour_nn CHECK (startHour is NOT NULL),
-    CONSTRAINT ehour_nn CHECK (endHour is NOT NULL),  
-    CONSTRAINT hrs_chk CHECK (endHour > startHour)
+    CONSTRAINT wday_fk FOREIGN KEY(wday) REFERENCES Day(dayName)
 );
 
 CREATE TABLE MenuType (
@@ -145,11 +136,10 @@ CREATE TABLE RestaurantMenuItemConfig (
 	restaurantID INT,
     menuItemName CHAR(25),
     configID INT,
-    quantity INT,
+    quantity INT NOT NULL,
     CONSTRAINT  rest_menu_item_config_pk PRIMARY KEY(menuType, restaurantID, menuItemName, configID),
     CONSTRAINT restaurant_menu_item_fk FOREIGN KEY(menuType, restaurantID, menuItemName) REFERENCES RestaurantMenuItem(menuType, restaurantID, menuItemName),
-    CONSTRAINT config_fk FOREIGN KEY(configID) REFERENCES ItemConfiguration(configID),
-    CONSTRAINT quantity_nn CHECK (quantity is NOT NULL)
+    CONSTRAINT config_fk FOREIGN KEY(configID) REFERENCES ItemConfiguration(configID)
 );
 
 CREATE TABLE DeliveryArea(
@@ -172,24 +162,18 @@ CREATE TABLE OrderStatus(
 
 CREATE TABLE Cart(
 	cartID INT,
-	orderedByName  CHAR(20),
-	orderedByType  CHAR(20),
-    areaName CHAR(20),
-    restaurantID INT,
-    discountID INT,
-    address CHAR(100),
-    statusName CHAR(20),
+	orderedByName  CHAR(20)  NOT NULL,
+	orderedByType  CHAR(20)  NOT NULL,
+    areaName CHAR(20) NOT NULL,
+    restaurantID INT NOT NULL,
+    discountID INT ,
+    address CHAR(100)  NOT NULL,
+    statusName CHAR(20)  NOT NULL,
 	CONSTRAINT cart_pk PRIMARY KEY(cartID),
     CONSTRAINT rest_area_fk FOREIGN KEY(areaName, restaurantID) REFERENCES RestaurantDeliveryArea(areaName, restaurantID),
     CONSTRAINT orderedBy_fk FOREIGN KEY(orderedByName, orderedByType) REFERENCES User(username, userType),
     CONSTRAINT discount_fk FOREIGN KEY(discountID) REFERENCES Discount(discountID),
-    CONSTRAINT status_fk FOREIGN KEY(statusName) REFERENCES OrderStatus(statusName),
-    CONSTRAINT orderedByN_nn CHECK (orderedByName is NOT NULL),
-    CONSTRAINT orderedByT_nn CHECK (orderedByType is NOT NULL),
-	CONSTRAINT rest_areaR_nn CHECK (restaurantID is NOT NULL),
-    CONSTRAINT rest_areaA_nn CHECK (areaName is NOT NULL),
-    CONSTRAINT status_nn CHECK (statusName is NOT NULL),
-    CONSTRAINT address_nn CHECK (address is NOT NULL)    
+    CONSTRAINT status_fk FOREIGN KEY(statusName) REFERENCES OrderStatus(statusName) 
 );
 
 CREATE TABLE CartItem (

@@ -23,14 +23,17 @@ app.get("/",function(req,res){
   res.sendFile(path + "index.html");
 });
  
-
 //importing the controllers
 var myController = require('./controllers/myController');
 var discountController = require('./controllers/discountController');
+var adminController = require('./controllers/adminController');
+var userController = require('./controllers/userController');
 
 //creating the route for the controller
 app.use('/example', myController);
 app.use('/discounts', discountController);
+app.use('/admin', adminController);
+app.use('/user', userController);
 
 
 router.use(function (req,res,next) {

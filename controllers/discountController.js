@@ -10,9 +10,12 @@ router.use(bodyParser.json());
 router.post('/add', function (req, res) {
   console.log("got post request add discount"); 
   
-  let code = req.body.discount_code
-  let date = '\''+ req.body.expiry_year + '-'+ req.body.expiry_month + '-'+req.body.expiry_day +'\''
+  let code = db.NullCheckChar(req.body.discount_code)
+  let date =  db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
   let rate = req.body.rate
+  
+  if(rate<0 || rate>1)res.send("invalid rate");
+  
   let sql = "insert into discount values ( " + code+ "," + date + "," + rate +")"
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
@@ -28,8 +31,11 @@ router.post('/add', function (req, res) {
  router.post('/updateRate', function (req, res) {
   console.log("got post request update discount rate"); 
   
-  let code = req.body.discount_code
+  let code =  db.NullCheckChar(req.body.discount_code)
   let rate = req.body.rate
+
+  if(rate<0 || rate>1)res.send("invalid rate");
+
   let sql = "update discount set rate = " + rate + "  where discountID = " + code;
   console.log(sql);
   db.mycon.query(sql, function (err, result) {
@@ -46,8 +52,8 @@ router.post('/add', function (req, res) {
  router.post('/updateExpiry', function (req, res) {
   console.log("got post request update discount expiry"); 
   
-  let code = req.body.discount_code
-  let date = '\''+ req.body.expiry_year + '-'+ req.body.expiry_month + '-'+req.body.expiry_day +'\''
+  let code =  db.NullCheckChar(req.body.discount_code)
+  let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year )
   let sql = "update discount set expiryDate = " + date + "  where discountID = " + code;
   db.mycon.query(sql, function (err, result) {
     

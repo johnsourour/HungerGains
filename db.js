@@ -11,6 +11,20 @@ con.connect(function(err) {
     console.log("db Connected");
     });
 
-module.exports.mycon = con;
+function NullCheckChar(field){
+    if(field == undefined)
+        return "NULL";
+    else 
+        return "'"+field+"'";
+}
 
-//this is just a config file to connect to your mysql database
+function NullCheckDate(day, month, year){
+    if(day == undefined || month == undefined || year == undefined)
+        return "NULL";
+    else 
+        return '\''+ year + '-'+ month + '-'+day +'\'';
+}
+
+module.exports.mycon = con;
+module.exports.NullCheckChar =  NullCheckChar;
+module.exports.NullCheckDate =  NullCheckDate;
