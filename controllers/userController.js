@@ -10,15 +10,15 @@ router.post('/login', function (req, res) {
   
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)//HASH IT HERE 
-  let userType = "'end_user'"
-  let sql = "select * from user where username = " + username + " and hashedPwd = " + password + " and userType = " + userType ;
+  let sql = "select * from user where username = " + username + " and hashedPwd = " + password + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+    var json = JSON.stringify(result)
+    console.log("Result: " + json);
     if(err){
       res.send(err);
     }else {
       if(result.length >0)
-        res.send('Success')
+        res.send('Success ' + result[0].userType) // REDIRECT TO PROPER PAGE
       else 
          res.send('Fail')  
     }
@@ -39,7 +39,7 @@ router.post('/signup', function (req, res) {
   let Lname = db.NullCheckChar(req.body.Lname)  
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
   let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," + addressLine1+ "," + addressLine2+ "," +
-           email + "," + Fname + "," + Lname + "," + password + "," + date+ ")";
+           email + "," + Fname + "," + Lname + "," + password + "," + date+ ", 'alive' )";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -54,14 +54,16 @@ router.get('/profile', function (req, res) {
   console.log("got get user profile"); 
   
   let username = db.NullCheckChar(req.body.username)
-  let userType = "'end_user'"
-  let sql = "select * from user where username = " + username + " and userType = " + userType;
+  let sql = "select * from user where username = " + username + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
       res.send(err.sqlMessage);
     }else {
-       res.send(result);  
+       if(result.length >0)
+        res.send(result)
+      else 
+         res.send('Fail')  
     }
       });
   });

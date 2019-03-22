@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS Log;
 DROP TABLE IF EXISTS LogType;
 DROP TABLE IF EXISTS User;
 DROP TABLE IF EXISTS UserCat;
+DROP TABLE IF EXISTS UserStatus;
 DROP TABLE IF EXISTS Discount;
 DROP TABLE IF EXISTS RestaurantDeliveryArea;
 DROP TABLE IF EXISTS Restaurant;
@@ -26,40 +27,45 @@ CREATE TABLE UserCat (
   description CHAR(60),
   CONSTRAINT usertype_pk PRIMARY KEY(userType)
   );
+  
+  CREATE TABLE UserStatus (
+  userStatusName CHAR(20),
+  description CHAR(60),
+  CONSTRAINT usertype_pk PRIMARY KEY(userStatusName)
+  );
+
 
 CREATE TABLE User (
   username  CHAR(20),
-  userType  CHAR(20),
-  phoneNo     CHAR(11) NOT NULL,
+  userType  CHAR(20) NOT NULL,
+  phoneNo     CHAR(11) NOT NULL UNIQUE,
   addressLine1    CHAR(40),
   addressLine2    CHAR(40),
-  email     CHAR(40) NOT NULL,
+  email     CHAR(40) NOT NULL UNIQUE,
   Fname     CHAR(15) NOT NULL,
   Lname     CHAR(15) NOT NULL,
   hashedPwd CHAR(70) NOT NULL,
-  Bdate Date, 
-  CONSTRAINT user_pk PRIMARY KEY(username, userType),
+  Bdate Date,   
+  userStatusName  CHAR(20) NOT NULL,
+  CONSTRAINT user_pk PRIMARY KEY(username),
   CONSTRAINT usertype_fk FOREIGN KEY(userType) REFERENCES UserCat(userType),
-  UNIQUE KEY(username)
+  CONSTRAINT userstatus_fk FOREIGN KEY(userStatusName) REFERENCES userStatus(userStatusName)
   );
   
 CREATE TABLE LogType (
-  logType CHAR(20),
-  CONSTRAINT logtype_pk PRIMARY KEY(logType)
+  logTypeName CHAR(20),
+  CONSTRAINT logtype_pk PRIMARY KEY(logTypeName)
   );
   
 CREATE TABLE Log (
-  logNo  INT,
-  logType  CHAR(20),
-  Tstamp     Date,  
-  changedByName  CHAR(20),
-  changedByType  CHAR(20),
-  changedOnName  CHAR(20),
-  changedOnType  CHAR(20),
-  CONSTRAINT logtype_fk FOREIGN KEY(logType) REFERENCES LogType(logType),
-  CONSTRAINT log_pk PRIMARY KEY(logNo),
-  CONSTRAINT changedOn_fk FOREIGN KEY(changedOnName, changedOnType) REFERENCES User(username, userType),  
-  CONSTRAINT changedBy_fk FOREIGN KEY(changedByName, changedByType) REFERENCES User(username, userType)
+  logTime     Timestamp,  
+  logTypeName  CHAR(20) NOT NULL,
+  changedByName  CHAR(20)  NOT NULL,
+  changedOnName  CHAR(20)  NOT NULL,
+  CONSTRAINT logtype_fk FOREIGN KEY(logTypeName) REFERENCES LogType(logTypeName),
+  CONSTRAINT log_pk PRIMARY KEY(logTime),
+  CONSTRAINT changedOn_fk FOREIGN KEY(changedOnName) REFERENCES User(username),  
+  CONSTRAINT changedBy_fk FOREIGN KEY(changedByName) REFERENCES User(username)
   );
 
 CREATE TABLE Discount (
@@ -163,7 +169,6 @@ CREATE TABLE OrderStatus(
 CREATE TABLE Cart(
 	cartID INT,
 	orderedByName  CHAR(20)  NOT NULL,
-	orderedByType  CHAR(20)  NOT NULL,
     areaName CHAR(20) NOT NULL,
     restaurantID INT NOT NULL,
     discountID INT ,
@@ -171,7 +176,7 @@ CREATE TABLE Cart(
     statusName CHAR(20)  NOT NULL,
 	CONSTRAINT cart_pk PRIMARY KEY(cartID),
     CONSTRAINT rest_area_fk FOREIGN KEY(areaName, restaurantID) REFERENCES RestaurantDeliveryArea(areaName, restaurantID),
-    CONSTRAINT orderedBy_fk FOREIGN KEY(orderedByName, orderedByType) REFERENCES User(username, userType),
+    CONSTRAINT orderedBy_fk FOREIGN KEY(orderedByName) REFERENCES User(username),
     CONSTRAINT discount_fk FOREIGN KEY(discountID) REFERENCES Discount(discountID),
     CONSTRAINT status_fk FOREIGN KEY(statusName) REFERENCES OrderStatus(statusName) 
 );
