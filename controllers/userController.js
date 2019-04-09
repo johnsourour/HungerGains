@@ -68,4 +68,11 @@ router.get('/profile', function (req, res) {
       });
   });
 
+//importing user controllers
+var addressController = require('./user/addressController');
+
+//creating the route for the controllers
+router.use('/address', addressController);
+
+
 module.exports = router;

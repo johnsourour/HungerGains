@@ -190,11 +190,11 @@ router.get('/all_logs', function (req, res) {
 });
 
 //importing admin controllers
-var restaurantController = require('./restaurantController');
-var discountController = require('./discountController');
+var restaurantController = require('./admin/restaurantController');
+var discountController = require('./admin/discountController');
 
 //creating the route for the controllers
-router.use('/restaurants', restaurantController);
-router.use('/discounts', discountController);
+router.use('/restaurant', restaurantController);
+router.use('/discount', discountController);
 
 module.exports = router;

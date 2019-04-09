@@ -1,13 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-var db = require('../db');
+var db = require('../../db');
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-router.get('/all', function (req, res) {
-  console.log("got post request"); 
+var cur_restaurant = 'McDonalds' //GET THIS
+
+router.get('/viewMenu', function (req, res) {
+  console.log("got get restaurantMenu"); 
   var sql = "select * from restaurant"
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
@@ -19,5 +21,6 @@ router.get('/all', function (req, res) {
       });
   });
   
+
 
 module.exports = router;

@@ -22,9 +22,18 @@ function NullCheckDate(day, month, year){
     if(day == undefined || month == undefined || year == undefined)
         return "NULL";
     else 
-        return '\''+ year + '-'+ month + '-'+day +'\'';
+        return "'"+ year + '-'+ month + '-'+day +"'";
 }
 
-module.exports.mycon = con;
-module.exports.NullCheckChar =  NullCheckChar;
-module.exports.NullCheckDate =  NullCheckDate;
+function NullCheckNum(num){
+    if(num==undefined)
+        return 0;
+    else 
+        return num;
+}
+module.exports = {
+    mycon : con,
+    NullCheckChar,
+    NullCheckNum, 
+    NullCheckDate
+}
