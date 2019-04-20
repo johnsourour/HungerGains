@@ -6,18 +6,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-router.get('/all', function (req, res) {
-  console.log("got get all restaurants"); 
-  var sql = "select * from restaurant"
-  db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
-    if(err){
-      res.send(err);
-    }else {
-      res.send(result);
-    }
-      });
-  });
   
 
 router.post('/add', function (req, res) {
@@ -27,11 +15,14 @@ router.post('/add', function (req, res) {
   var deliveryFee = db.NullCheckNum(req.body.deliveryFee); 
   var address = db.NullCheckChar(req.body.address); 
   var taxPercent = db.NullCheckNum(req.body.taxPercent); 
+  var startHour = db.NullCheckChar(req.body.startHour);
+  var endHour = db.NullCheckChar(req.body.endHour);
   if(taxPercent<0.0 || taxPercent>1.0){
     res.send("wrong params");
     return;
   }
-  var sql = "insert into restaurant Values(null, "+name +","+cuisine +","+deliveryFee +","+address +","+taxPercent +");";
+  var sql = "insert into restaurant Values(null, "+name +","+cuisine +","+deliveryFee +","+address +","+taxPercent +","+
+        startHour + ","+ endHour +");";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -51,11 +42,15 @@ router.post('/modify', function (req, res) {
   var deliveryFee = db.NullCheckNum(req.body.deliveryFee); 
   var address = db.NullCheckChar(req.body.address); 
   var taxPercent = db.NullCheckNum(req.body.taxPercent); 
+  var startHour = db.NullCheckChar(req.body.startHour);
+  var endHour = db.NullCheckChar(req.body.endHour);
   if(taxPercent<0.0 || taxPercent>1.0){
     res.send("wrong params");
     return;
   }
-  var sql = "update restaurant set restaurantName = "+name +", cuisine = "+cuisine +", deliveryFee = "+deliveryFee +", rest_add = "+address +", taxPercent = "+taxPercent +
+  var sql = "update restaurant set restaurantName = "+name +", cuisine = "+cuisine +", deliveryFee = "+
+        deliveryFee +", rest_add = "+address +", taxPercent = "+taxPercent +
+         ", startHour = "+         startHour+", endHour = "+endHour+
         " where restaurantID = "+restaurantID;
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));

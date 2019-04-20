@@ -81,21 +81,6 @@ VALUES('Dinner');
 INSERT INTO MenuType
 VALUES('Dessert');
 
-INSERT INTO Day
-VALUES('Monday');
-INSERT INTO Day
-VALUES('Tuesday');
-INSERT INTO Day
-VALUES('Wednesday');
-INSERT INTO Day
-VALUES('Thursday');
-INSERT INTO Day
-VALUES('Friday');
-INSERT INTO Day
-VALUES('Saturday');
-INSERT INTO Day
-VALUES('Sunday');
-
 INSERT INTO OrderStatus
 VALUES('Pending');
 INSERT INTO OrderStatus
@@ -128,4 +113,15 @@ Insert into user
 Values('johnadmin', 'admin', '55381238', 'admin@email', 'john', 'admin', 'adminpwd', null, 'alive');
 
 INSERT INTO Restaurant
-VALUES(null, 'McDonalds', 'American', 7, 'a street number', 0.14);
+VALUES(null, 'McDonalds', 'American', 7, 'a street number', 0.14, '093000', '230000');
+INSERT INTO Restaurant
+VALUES(null, 'KFC', 'Italian', 7, 'a street number', 0.14,'093000', '230000');
+
+insert into RestaurantMenu values ('Lunch', 1 , '083000', '223000');
+insert into RestaurantMenu values ('Dinner', 2 , '193000', '223000');
+insert into RestaurantMenu values ('Dessert', 1 , '123000', '203000');
+
+
+insert into RestaurantDeliveryArea values ('Heliopolis', 1);
+insert into RestaurantDeliveryArea values ('New Cairo',2);
+insert into RestaurantDeliveryArea values ('Zamalek',3);

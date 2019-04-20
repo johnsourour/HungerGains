@@ -85,24 +85,11 @@ CREATE TABLE Restaurant (
     cuisine CHAR(20) NOT NULL, 
     deliveryFee FLOAT,
     rest_add CHAR(100),
-    taxPercent FLOAT CHECK(taxPercent>=0 and taxPercent<=1),
+    taxPercent FLOAT CHECK(taxPercent>=0 and taxPercent<=1),    
+    startHour TIME,
+    endHour TIME,
     CONSTRAINT restaurant_pk PRIMARY KEY(restaurantID),
     CONSTRAINT cuisine_fk FOREIGN KEY(cuisine) REFERENCES Cuisine(cuisineName)
-);
-
-
-CREATE TABLE Day (
-    dayName Char(10),    
-    CONSTRAINT day_pk PRIMARY KEY(dayName)
-);
-
-CREATE TABLE WorkingHour (
-    wday CHAR(10),
-	restaurantID INT,
-    startHour TIME NOT NULL,
-    endHour TIME NOT NULL,
-    CONSTRAINT wday_pk PRIMARY KEY(wday, restaurantID),
-    CONSTRAINT wday_fk FOREIGN KEY(wday) REFERENCES Day(dayName)
 );
 
 CREATE TABLE MenuType (
@@ -119,10 +106,6 @@ CREATE TABLE RestaurantMenu (
     CONSTRAINT menuType_fk FOREIGN KEY(menuType) REFERENCES MenuType(menuType)
 );
 
-CREATE TABLE MenuItem (
-    menuItemName CHAR(25),
-    CONSTRAINT  menuItem_pk PRIMARY KEY(menuItemName)
-);
 
 CREATE TABLE ItemConfiguration (
 	configName CHAR(30),
@@ -136,8 +119,7 @@ CREATE TABLE RestaurantMenuItem (
     menuItemName CHAR(25),
     basePrice FLOAT NOT NULL,
     CONSTRAINT  rest_menu_item_pk PRIMARY KEY(menuType, restaurantID, menuItemName),
-    CONSTRAINT restaurant_menu_fk FOREIGN KEY(menuType, restaurantID) REFERENCES RestaurantMenu(menuType, restaurantID),
-    CONSTRAINT menu_item_fk FOREIGN KEY(menuItemName) REFERENCES MenuItem(menuItemName)    
+    CONSTRAINT restaurant_menu_fk FOREIGN KEY(menuType, restaurantID) REFERENCES RestaurantMenu(menuType, restaurantID)   
 );
 
 
@@ -186,7 +168,6 @@ CREATE TABLE Cart(
     areaName CHAR(20) NOT NULL,
     restaurantID INT NOT NULL,
     discountID INT ,
-    address CHAR(100)  NOT NULL,
     statusName CHAR(20),
 	CONSTRAINT cart_pk PRIMARY KEY(cartID),
     CONSTRAINT rest_area_fk FOREIGN KEY(areaName) REFERENCES DeliveryArea(areaName),    

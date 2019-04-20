@@ -68,11 +68,80 @@ router.get('/profile', function (req, res) {
       });
   });
 
+
+function CheckField(key, value){
+  if(value== null || value==undefined)
+    return key;
+  return db.NullCheckChar(value);
+};
+
+function CheckQuery(key, value){
+  if(value== null || value==undefined)
+    return key;
+  return value;
+};
+
+  router.get('/restaurants', function (req, res) {
+  console.log("got get all restaurants"); 
+  var cuisine = CheckField("cuisine", req.body.cuisine);
+  var areaName = CheckField("areaName", req.body.areaName);
+  var search = "'%" + CheckQuery("", req.body.search) + "%'";
+  console.log("SEARCH "+search);
+  var sql = "select * from restaurant where restaurantID IN ( select restaurantID from restaurantdeliveryarea where areaName ="+ areaName+
+    " and restaurantID IN  (select restaurantID from restaurant where restaurantName like " + search +")) and cuisine = "+ cuisine
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err);
+    }else {
+      res.send(result);
+    }
+      });
+  });
+  
+  var current_restaurant = 'McDonalds'; //GET THIS SOMEHOW
+function CheckActive(value){
+  if(value== null || value==undefined)
+    return "starthour=starthour";
+  return "startHour<=" + value + " and endhour>="+value;
+};
+function CheckZeros(value){
+  val = value.toString();
+  if(val.length==2)return value;
+  else if(val.length==1)return "0"+value;
+  else return "00";
+};
+
+    router.get('/restaurantMenu', function (req, res) {
+      var today = new Date();
+      var time;
+      if(req.body.active=="True"){
+        time= CheckZeros(today.getHours())+""+ CheckZeros(today.getMinutes())+""+ CheckZeros(today.getSeconds());
+      }
+      console.log(time);
+      var active = CheckActive(time);
+      var menuType = CheckField("menuType", req.body.menuType);
+      var sql = "select * from restaurantMenu where restaurantID IN ( select restaurantID from restaurant where restaurantName ="+
+      db.NullCheckChar(current_restaurant) +") and "+active+" and menuType = "+menuType;
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err);
+    }else {
+      res.send(result);
+    }
+      });
+  });
+  
+
+
 //importing user controllers
 var addressController = require('./user/addressController');
+var menuController = require('./user/menuController');
 
 //creating the route for the controllers
 router.use('/address', addressController);
+router.use('/menu', menuController);
 
 
 module.exports = router;
