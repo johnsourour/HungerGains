@@ -70,7 +70,7 @@ CREATE TABLE Log (
 CREATE TABLE Discount (
 	discountID INT,
     expiryDate Date, 
-    rate INT,
+    rate FLOAT,
     CONSTRAINT discount_pk PRIMARY KEY(discountID)
 );
 
@@ -165,12 +165,10 @@ CREATE TABLE Cart(
 	cartID INT auto_increment,
 	orderedByName  CHAR(20)  NOT NULL,
     orderedByAddNo INT NOT NULL, 
-    areaName CHAR(20) NOT NULL,
     restaurantID INT NOT NULL,
     discountID INT ,
     statusName CHAR(20),
 	CONSTRAINT cart_pk PRIMARY KEY(cartID),
-    CONSTRAINT rest_area_fk FOREIGN KEY(areaName) REFERENCES DeliveryArea(areaName),    
     CONSTRAINT rest_name_fk FOREIGN KEY(restaurantID) REFERENCES Restaurant(restaurantID),    
     CONSTRAINT orderedByAdd_fk FOREIGN KEY(orderedByAddNo) REFERENCES UserAddress(userAddNo),
     CONSTRAINT orderedByName_fk FOREIGN KEY(orderedByName) REFERENCES User(username),
@@ -189,4 +187,20 @@ CREATE TABLE CartItem (
     CONSTRAINT user_ordered_item_pk PRIMARY KEY(cartID, menuType, restaurantID, menuItemName, configName),
     CONSTRAINT menu_item_config_fk FOREIGN KEY(menuType, restaurantID, menuItemName, configName) REFERENCES RestaurantMenuItemConfig(menuType, restaurantID, menuItemName, configName),
     CONSTRAINT cart_fk FOREIGN KEY(cartID) REFERENCES Cart(cartID)
+);
+
+drop view if exists cartTotal;
+create view cartTotal(cartID, total)
+as (
+	Select DISTINCT CC.cartID, RR.deliveryFee+sum(R.basePrice*IC.ratio*(1+RR.taxPercent)*C.quantity*(1-IF(CC.discountID is NULL,0, d.rate)))
+    from Cart CC, CartItem C, RestaurantMenuItem R, Restaurant RR, ItemConfiguration IC, Discount D
+    where CC.cartID = C.cartID
+    and  R.menuType = C.menuType
+	and R.restaurantID = C.restaurantID
+    and R.menuItemName = C.menuItemName
+    and R.restaurantID = RR.restaurantID
+    and IC.configName = C.configName
+    and ((D.discountID = CC.discountID and D.expiryDate>CurDate()) or CC.discountID is NULL)
+	group by CC.cartID, D.discountID, RR.deliveryFee, R.basePrice, IC.ratio, RR.taxPercent, C.quantity, D.rate
+    order by CC.cartID
 );

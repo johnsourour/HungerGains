@@ -25,6 +25,25 @@ router.get('/all', function (req, res) {
       });
   });
 
+router.get('/byRestaurant', function (req, res) {
+  console.log("got get user addresses"); 
+  var restaurantID = req.body.restaurantID
+  let sql = "select * from userAddress where username = " + db.NullCheckChar(cur_user) + " and areaname IN("+
+  "Select areaname from restaurantDeliveryarea where restaurantID = "+restaurantID +");";
+  db.mycon.query(sql, function (err, result) {
+    console.log("Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err.sqlMessage);
+    }else {
+       if(result.length >0)
+        res.send(result)
+      else 
+         res.send('Fail')  
+    }
+      });
+  });
+
+
 router.post('/add', function (req, res) {
   console.log("got post user add address"); 
   var area = req.body.area;

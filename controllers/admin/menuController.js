@@ -18,9 +18,9 @@ router.get('/viewMenu', function (req, res) {
         res.send(err);
 
       }else {
-        restaurantID=result[0].restaurantID
+        var restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
-        var sql2 = "select * from restaurantMenu where restaurantID = " + restaurantID ;
+        var sql2 = "select * from restaurantMenu where restaurantID = " + restaurantID;
          db.mycon.query(sql2, function (err, result) {
             console.log("Result: " + JSON.stringify(result));
             if(err){

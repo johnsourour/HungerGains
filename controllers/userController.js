@@ -2,6 +2,17 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var db = require('../db');
+var nodemailer = require('nodemailer'); 
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'hungergains19@gmail.com',
+    pass: 'HG_2019_JohnS'
+  }
+});
+
+var generator = require('generate-password');
+
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
@@ -49,6 +60,64 @@ router.post('/signup', function (req, res) {
     }
       });
   });
+var cur_user = 'johnuser' 
+router.post('/changePassword', function (req, res) {
+  console.log("got change pwd"); 
+  let password = db.NullCheckChar(req.body.password) //HASH IT HERE 
+  var sql = "update User set hashedPwd = " +password + " where username = " + db.NullCheckChar(cur_user);
+  db.mycon.query(sql, function (err, result) {
+    console.log("Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err.sqlMessage);
+    }else {
+       res.send('Success');  
+    }
+      });
+  });
+
+
+router.post('/forgotPassword', function (req, res) {
+  console.log("got forgot pwd"); 
+  var password = generator.generate({
+    length: 10,
+    numbers: true
+  });
+  var username = db.NullCheckChar(req.body.username)
+  var sql = "update User set hashedPwd = " + db.NullCheckChar(password) + " where username = " +username;
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql+"Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err.sqlMessage);
+    }else {
+       var sql2 = "select email from User where username = " + username;
+       db.mycon.query(sql2, function (err, result) {
+          console.log(sql2+"Result: " + JSON.stringify(result));
+          if(err){
+            res.send(err.sqlMessage);
+          }else {
+            var email = result[0].email
+            var mailOptions = {
+              from: 'hungergains19@gmail.com',
+              to: email,
+              subject: 'Your password has been reset',
+              text: 'Dear '+req.body.username +",\n Your password has been reset to: " + password +"\n You can now login and change it\n"+
+              "\n Regards, \n HungerGains Team\n"
+            };
+            transporter.sendMail(mailOptions, function(error, info){
+                  if (error) {
+                    console.log(error);
+                  } else {
+                    console.log('Email sent: ' + info.response);
+                  }
+               }); 
+            
+          }
+            });
+    }
+      });
+  });
+
+
 
 router.get('/profile', function (req, res) {
   console.log("got get user profile"); 
@@ -81,7 +150,7 @@ function CheckQuery(key, value){
   return value;
 };
 
-  router.get('/restaurants', function (req, res) {
+router.get('/restaurants', function (req, res) {
   console.log("got get all restaurants"); 
   var cuisine = CheckField("cuisine", req.body.cuisine);
   var areaName = CheckField("areaName", req.body.areaName);
@@ -98,7 +167,21 @@ function CheckQuery(key, value){
     }
       });
   });
-  
+
+  router.get('/myOrders', function (req, res) {
+  var cur_user = 'johnuser' // GET THIS
+  var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err);
+    }else {
+      res.send(result);
+    }
+      });
+  });
+
+
   var current_restaurant = 'McDonalds'; //GET THIS SOMEHOW
 function CheckActive(value){
   if(value== null || value==undefined)
@@ -112,7 +195,7 @@ function CheckZeros(value){
   else return "00";
 };
 
-    router.get('/restaurantMenu', function (req, res) {
+router.get('/restaurantMenu', function (req, res) {
       var today = new Date();
       var time;
       if(req.body.active=="True"){
@@ -133,15 +216,13 @@ function CheckZeros(value){
       });
   });
   
-
-
 //importing user controllers
 var addressController = require('./user/addressController');
-var menuController = require('./user/menuController');
+var restaurantController = require('./user/restaurantController');
 
 //creating the route for the controllers
 router.use('/address', addressController);
-router.use('/menu', menuController);
+router.use('/restaurant', restaurantController);
 
 
 module.exports = router;
