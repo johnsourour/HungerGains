@@ -6,22 +6,33 @@ var router = express.Router();
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
+ 
 app.use(express.static('public'));
+ 
 var path = __dirname + '/views/';
 
-app.use(function(req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-    next();
-  });
+//app.engine('html', engines.mustache);
+//app.set('view engine', 'html');
+
+// app.use(function(req, res, next) {
+//     res.setHeader("Access-Control-Allow-Origin", "*");
+//     res.setHeader("Access-Control-Allow-Credentials", "true");
+//     res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+//     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
+//     next();
+//   });
 //the above function just allows for requests and responses to be 
 //passed to and from backend and frontend 
 
+ 
+
 app.get("/",function(req,res){
-  res.sendFile(path + "index.html");
+  res.sendFile(path+"login.html");
 });
+app.get("/home",function(req,res){
+  res.sendFile(path+"home.html");
+});
+
  
 //importing the controllers
 var myController = require('./controllers/myController');
@@ -37,7 +48,7 @@ app.use('/staff', staffController);
 
 
 router.use(function (req,res,next) {
-  console.log("/" + req.method);
+  console.log("/" + req.method + " "+ req.url);
   next();
 });
 

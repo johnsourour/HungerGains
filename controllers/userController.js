@@ -17,7 +17,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 router.post('/login', function (req, res) {
-  console.log("got post login"); 
+  console.log("got post login " + req.body.username +" " +req.body.password); 
   
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)//HASH IT HERE 
@@ -26,12 +26,11 @@ router.post('/login', function (req, res) {
     var json = JSON.stringify(result)
     console.log("Result: " + json);
     if(err){
-      res.send(err);
+      console.log(err);
+      return res.send(err);
     }else {
-      if(result.length >0)
-        res.send('Success ' + result[0].userType) // REDIRECT TO PROPER PAGE
-      else 
-         res.send('Fail')  
+      console.log("here");
+      return res.send(result)
     }
       });
   });
