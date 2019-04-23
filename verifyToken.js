@@ -12,13 +12,27 @@ function verifyToken(req, res, next) {
       console.log(err)
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
     }
-
-    // if everything good, save to request for use in other routes
-    req.userId = decoded.id.user;
-    console.log("all good in verify token " +token)
     
   });
   return next();
 }
+function getUserInfo(token, callback){
 
-module.exports = verifyToken;
+  if (!token)
+      return callback({});
+
+  jwt.verify(token, config.secret, function(err, decoded) {
+    if (err){
+      console.log(err)
+       return callback({});
+    }
+    console.log("decoded ", JSON.stringify(decoded.user))
+    return callback(decoded);
+    
+  });
+}
+
+module.exports = {
+  verifyToken : verifyToken,
+  getUserInfo : getUserInfo
+};

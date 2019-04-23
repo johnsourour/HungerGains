@@ -26,9 +26,7 @@ $( document ).ready(function() {
         if(response.length){            
          
           var formData2 = {
-            username : response[0].username,
-            usertype : response[0].usertype,
-            password : $("#pwd").val()
+            user : [response[0].username, response[0].userType]
           }
           $.ajax({
             type : "POST",

@@ -6,6 +6,8 @@ var verifyToken = require('./verifyToken')
 var router = express.Router();
 
 var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -53,11 +55,34 @@ router.use(function (req,res,next) {
 app.use("/",router);
 
 app.get("/home" , function(req,res){  
- res.sendFile(path+"home.html")
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    console.log("in home get "+decoded.user+" "+decoded.type)
+    if(decoded.type==undefined)
+      res.sendFile(path+"404.html")
+    else 
+     res.sendFile(path+"home.html")
+ })
+
+});
+app.get("/testcookie" , function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    console.log("in home get "+decoded.user+" "+decoded.type)
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else 
+     res.redirect("/home")
+ })
+
+});
+app.get("/logout" , function(req,res){  
+ res.clearCookie("cookieToken");
+ res.redirect("/")
+
 });
 
-app.post("/home" ,verifyToken, function(req,res){
-  console.log("in home "+req.body.token)
+app.post("/home" ,verifyToken.verifyToken, function(req,res){
+  console.log("in home "+JSON.stringify(req.body.token))
+  res.cookie("cookieToken", req.body.token); 
  res.send({});
 });
 

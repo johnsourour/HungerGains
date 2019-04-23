@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
-router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 var jwt = require('jsonwebtoken');
@@ -9,11 +9,11 @@ var bcrypt = require('bcryptjs');
 var config = require('../config');
 
 router.post('/register', function(req, res) {
-  console.log("got auth register")
-  var username = req.body.username;
-  var password = req.body.password;
-  var usertype = req.body.usertype
-  var token = jwt.sign({ id: {user: username, pwd:password, type: usertype} }, config.secret, {
+  var username = req.body.user[0];
+  var usertype = req.body.user[1];
+
+  console.log("got auth register"+username+" "+usertype)
+  var token = jwt.sign({user:username, type:usertype}, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
     return res.send(JSON.stringify({token:token}));
@@ -29,7 +29,7 @@ router.get('/me', function(req, res) {
     if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
     
  
-  res.status(200).send(decoded.id.user);
+  res.status(200).send(decoded.id);
   });
 });
 
