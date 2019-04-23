@@ -2,7 +2,11 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var db = require('../db');
-var nodemailer = require('nodemailer'); 
+var verifyToken = require('../verifyToken');
+var nodemailer = require('nodemailer');
+
+var bcrypt = require('bcryptjs');
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -20,7 +24,8 @@ router.post('/login', function (req, res) {
   console.log("got post login " + req.body.username +" " +req.body.password); 
   
   let username = db.NullCheckChar(req.body.username)
-  let password = db.NullCheckChar(req.body.password)//HASH IT HERE 
+  //let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8))
+  let password = db.NullCheckChar(req.body.password)
   let sql = "select * from user where username = " + username + " and hashedPwd = " + password + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {
     var json = JSON.stringify(result)
@@ -30,6 +35,7 @@ router.post('/login', function (req, res) {
       return res.send(err);
     }else {
       console.log("here");
+      
       return res.send(result)
     }
       });
@@ -39,16 +45,15 @@ router.post('/signup', function (req, res) {
   console.log("got post signup"); 
   
   let username = db.NullCheckChar(req.body.username)
-  let password = db.NullCheckChar(req.body.password) //HASH IT HERE 
+  //let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8)) 
+  let password = db.NullCheckChar(req.body.password) 
   let userType = "'end_user'"
   let phoneNo = db.NullCheckChar(req.body.phoneNo)
-  let addressLine1 = db.NullCheckChar(req.body.addressLine1)
-  let addressLine2 = db.NullCheckChar(req.body.addressLine2)
   let email = db.NullCheckChar(req.body.email)
   let Fname = db.NullCheckChar(req.body.Fname)
   let Lname = db.NullCheckChar(req.body.Lname)  
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
-  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," + addressLine1+ "," + addressLine2+ "," +
+  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," +
            email + "," + Fname + "," + Lname + "," + password + "," + date+ ", 'alive' )";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
@@ -62,7 +67,8 @@ router.post('/signup', function (req, res) {
 var cur_user = 'johnuser' 
 router.post('/changePassword', function (req, res) {
   console.log("got change pwd"); 
-  let password = db.NullCheckChar(req.body.password) //HASH IT HERE 
+ // let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8)) 
+  let password = db.NullCheckChar(req.body.password)  
   var sql = "update User set hashedPwd = " +password + " where username = " + db.NullCheckChar(cur_user);
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
@@ -82,7 +88,7 @@ router.post('/forgotPassword', function (req, res) {
     numbers: true
   });
   var username = db.NullCheckChar(req.body.username)
-  var sql = "update User set hashedPwd = " + db.NullCheckChar(password) + " where username = " +username;
+  var sql = "update User set hashedPwd = " + db.NullCheckChar(bcrypt.hashSync(password, 8)) + " where username = " +username;
   db.mycon.query(sql, function (err, result) {
     console.log(sql+"Result: " + JSON.stringify(result));
     if(err){

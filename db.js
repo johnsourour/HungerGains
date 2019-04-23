@@ -35,5 +35,5 @@ module.exports = {
     mycon : con,
     NullCheckChar,
     NullCheckNum, 
-    NullCheckDate
+    NullCheckDate, 
 }
