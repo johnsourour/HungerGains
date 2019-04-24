@@ -10,31 +10,30 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  
-  <script src="/js/loginPost.js"></script>
-    <title>Login</title>
+  <script src="/js/forgot.js"></script>
+    <title>Forgot Password</title>
   </head>
   <body>
     <div class="container py-5" style="height: 200px;">
       <div class="col mx-auto" style="width: 500px;">  
         <div class="row mx-auto" style="width: 200px;">       
-          <h1>Login</h1>        
+          <h1>Forgot Password</h1>        
         </div>
       <form id="loginForm">
         <div class="form-group">
           <label >Username</label>
           <input type="text" class="form-control" id="uname" placeholder="Username" required>
         </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" class="form-control" id="pwd" placeholder="Password">
+      
+        <div class = "row">
+        <div class = "col">
+        <button type="submit" class="btn btn-primary " id="Login">Submit</button>
         </div>
-        <button type="submit" class="btn btn-primary" id="Login">Submit</button>
-        <a href="forgotPassword" class="btn btn-primary" id="ForgotPassword">ForgotPassword</a>
-        <a href="signup" class="btn btn-primary" id="Register">Register</a>
-        <div id="postresult"></div>
-      </form>
+  
       </div>
       </form>
+      </div>
+
     </div>
   </body>
 </html>

@@ -33,7 +33,14 @@ app.get("/",function(req,res){
   res.sendFile(path+"login.html");
 });
 
-
+app.get("/forgotPassword",function(req,res){
+  res.sendFile(path + "forgot.html");
+});
+ 
+app.get("/signup",function(req,res){
+  res.sendFile(path + "signup.html");
+});
+ 
  
 //importing the controllers
 var adminController = require('./controllers/adminController');
@@ -58,7 +65,7 @@ app.get("/home" , function(req,res){
  var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
     console.log("in home get "+decoded.user+" "+decoded.type)
     if(decoded.type==undefined)
-      res.sendFile(path+"404.html")
+      res.redirect("/")
     else 
      res.sendFile(path+"home.html")
  })
@@ -83,11 +90,12 @@ app.get("/logout" , function(req,res){
 app.post("/home" ,verifyToken.verifyToken, function(req,res){
   console.log("in home "+JSON.stringify(req.body.token))
   res.cookie("cookieToken", req.body.token); 
- res.send({});
+  res.send({});
 });
 
 app.use("*",function(req,res){
   res.sendFile(path + "404.html");
 });
- 
+
+
 module.exports = app;
