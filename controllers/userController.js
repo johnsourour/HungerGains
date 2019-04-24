@@ -4,9 +4,11 @@ var bodyParser = require('body-parser');
 var db = require('../db');
 var verifyToken = require('../verifyToken');
 var nodemailer = require('nodemailer');
-
+var app = require('../app.js');
 var bcrypt = require('bcryptjs');
 
+var pp = require('path');
+var path= pp.resolve('./views');
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -56,6 +58,31 @@ router.post('/signup', function (req, res) {
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
   let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," +
            email + "," + Fname + "," + Lname + "," + password + "," + date+ ", 'alive' )";
+  db.mycon.query(sql, function (err, result) {
+    console.log("Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err.sqlMessage);
+    }else {
+       res.send('Success');  
+    }
+      });
+  });
+
+router.post('/changeInfo', function (req, res) {
+  console.log("got change info"); 
+  
+  let username = db.NullCheckChar(req.body.username)
+  //let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8)) 
+  let password = db.NullCheckChar(req.body.password) 
+  let userType = "'end_user'"
+  let phoneNo = db.NullCheckChar(req.body.phoneNo)
+  let email = db.NullCheckChar(req.body.email)
+  let Fname = db.NullCheckChar(req.body.Fname)
+  let Lname = db.NullCheckChar(req.body.Lname)  
+  let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
+  let sql = "update user set usertype=" + userType+ " , phoneNo=" +  phoneNo+ " , email=" +
+           email + " , Fname=" + Fname + " , Lname=" + Lname + " , hashedPwd=" + password + " , Bdate=" + date +
+           " where username =" + username;
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -124,22 +151,33 @@ router.post('/forgotPassword', function (req, res) {
       });
   });
 
-
-
-router.get('/profile', function (req, res) {
+  //FIGURE THIS
+function getDate (Bdate){
+  var day = 1
+  var month = 2
+  var year = 3
+  return [day, month, year]
+}
+router.get('/profile/:user', function (req, res) {
   console.log("got get user profile"); 
   
-  let username = db.NullCheckChar(req.body.username)
+  let username = db.NullCheckChar(req.params["user"])
   let sql = "select * from user where username = " + username + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
       res.send(err.sqlMessage);
-    }else {
+    }else { 
        if(result.length >0)
-        res.send(result)
+       {
+        var day, year, month;
+        [day, month, year] = getDate(result[0].Bdate) 
+        res.render(path+"/profile.html",{user:req.params["user"], phoneNo:result[0].phoneNo, 
+        Fname:result[0].Fname, Lname:result[0].Lname, email:result[0].email, pwd:result[0].hashedPwd,
+          day:day, year:year, month:month})
+       }
       else 
-         res.send('Fail')  
+         res.redirect('/404')  
     }
       });
   });

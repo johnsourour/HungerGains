@@ -46,7 +46,7 @@ router.get('/byRestaurant', function (req, res) {
 
 router.post('/add', function (req, res) {
   console.log("got post user add address"); 
-  var area = req.body.area;
+  var area = req.body.areaName;
   var address1 = req.body.address1;  
   var address2 = req.body.address2;
   let sql = "insert into UserAddress Values (null,"+  db.NullCheckChar(cur_user) +","+ db.NullCheckChar(area)+","+db.NullCheckChar(address1)+","+db.NullCheckChar(address2)+");";

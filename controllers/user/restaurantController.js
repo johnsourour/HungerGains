@@ -19,7 +19,7 @@ function CheckZeros(value){
  
 
 // GET MENU ITEMS (ACTIVE)
-router.get('/items', function (req, res) {
+router.post('/items', function (req, res) {
   console.log("get Menu Item"); 
   var today = new Date();
   var time = CheckActive(CheckZeros(today.getHours())+""+ CheckZeros(today.getMinutes())+""+ CheckZeros(today.getSeconds()))

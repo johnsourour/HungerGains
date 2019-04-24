@@ -11,7 +11,10 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
- 
+var engines = require('consolidate');
+app.engine('html', engines.mustache);
+
+
 app.use(express.static('public'));
  
 var path = __dirname + '/views/';
@@ -71,6 +74,21 @@ app.get("/home" , function(req,res){
  })
 
 });
+
+
+app.get("/profile" , function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    console.log("in home get "+decoded.user+" "+decoded.type)
+    if(decoded.type==undefined)
+      res.redirect("/404")
+    else 
+      //res.render(path+"profile.html",{user:decoded.user, type:decoded.type, phoneNo:req.params["phoneNo"]})
+      res.redirect('/user/profile/'+decoded.user)
+
+ })
+
+});
+
 app.get("/testcookie" , function(req,res){  
  var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
     console.log("in home get "+decoded.user+" "+decoded.type)
@@ -98,4 +116,4 @@ app.use("*",function(req,res){
 });
 
 
-module.exports = app;
+module.exports = app
