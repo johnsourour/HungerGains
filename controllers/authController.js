@@ -16,7 +16,8 @@ router.post('/register', function(req, res) {
   var token = jwt.sign({user:username, type:usertype}, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    return res.send(JSON.stringify({token:token}));
+    res.cookie("cookieToken", token); 
+    res.send(JSON.stringify({token:token}));
   
 });
 

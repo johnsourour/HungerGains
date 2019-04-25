@@ -137,8 +137,10 @@ insert into UserAddress values (null, 'johnuser', 'Zamalek','asdads',null);
 
 
 insert into RestaurantMenuItem values ('Lunch', 1 , 'BigMac', 30);
+insert into RestaurantMenuItem values ('Lunch', 1 , 'BigTasty', 40);
 insert into RestaurantMenuItem values ('Dinner', 1 , 'Pancakes', 30);
 insert into RestaurantMenuItemConfig values ('Lunch', 1 , 'BigMac', 'Regular');
+insert into RestaurantMenuItemConfig values ('Lunch', 1 , 'BigTasty', 'Regular');
 
 insert into RestaurantMenuItemConfig values ('Lunch', 1 , 'BigMac', 'Combo - Small');
 insert into Discount values(10,'2020-02-02',0.1); 

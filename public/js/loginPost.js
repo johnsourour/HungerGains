@@ -50,7 +50,9 @@ $( document ).ready(function() {
                     success : function(response3) {
                         window.location.href = "home"
                     },
-                    error : function(e) {        console.log("ERROR: ", e); alert("Error33!" +JSON.stringify(e))}
+                    error : function(e) {        $("#postresult").html("<p>" + 
+                "Something went wrong "+ "</p>"); 
+                    }
                   });
               
               }

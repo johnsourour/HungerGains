@@ -8,7 +8,7 @@ $( document ).ready(function() {
     //   myOtherFunction();
     // } 
     //alert("ana hena")
-    ajaxGet();
+    ajaxGet($("input[name='msel']:checked").val());
   });
 
 // GET REQUEST
@@ -17,34 +17,59 @@ $("#restSearch").submit(function(event){
   ajaxGet();
 });
 
-$("#areas_select").click(function(event){
-  event.preventDefault();
-  ajaxGetAreas();
-});
 $("#cuisines_select").click(function(event){
   event.preventDefault();
   ajaxGetCuisines();
 });
 
 // DO GET
-function ajaxGet(){
+function ajaxGet(menu){
   var formData = {
-      restaurantName :  $("#rest").val()
+      restaurantName :  $("#rest").val(),
+      menuType :menu
     }
-  
-  // alert(JSON.stringify(formData))
   $.ajax({
     type : "POST",
     contentType : "application/json",
-    url : "./user/restaurant/items",
+    url : window.location.origin+"/user/restaurant/items",
     data : JSON.stringify(formData),
     dataType : 'json',
     success: function(result){
       $('#itemrest').empty();
       $.each(result, function(i, item){
-        $('#itemrest').append("<tr> <th scope='row'> <a href='user/restaurantMenu/'> "+
-        item.menuItemName + "</a></th> <td> "+
-        item.basePrice + "</td></tr>")
+        
+        var formData2 ={ 
+           restaurantName : $("#rest").val(),
+           menuType : menu, 
+           itemName : item.menuItemName
+        }
+        var id = menu.replace(/\s/g, '')+item.menuItemName.replace(/\s/g, '')
+        $.ajax({
+          type : "POST",
+          contentType : "application/json",
+          url : window.location.origin+"/user/restaurant/itemConfigs",
+          data : JSON.stringify(formData2),
+          dataType : 'json',
+          success: function(result){
+            var dd="";
+           dd+="<tr> <th scope='row'> <a href='user/restaurantMenu/'> "+
+        item.menuItemName + "</a></th> <td > "+
+        item.basePrice + "</td><td >"
+        
+            dd+="<select id='"+id+"'>";
+           
+            $.each(result, function(i, config){
+             dd+="<option value'"+config.configName+ "'>"+config.configName+"</option>"
+            });
+            
+            dd+="</select></td></tr>"
+          $('#itemrest').append(dd)
+          },
+          error : function(e) {
+            alert("Error in select")
+          }
+      }); 
+
       });
       console.log("Success: ", result);
     },
@@ -62,7 +87,7 @@ function ajaxGetAreas(){
 
   $.ajax({
     type : "GET",
-    url : "./user/areas",
+    url : window.location.origin+"/user/areas",
     success: function(result){
       $('#areas').empty();
       $('#areas').append("<label for='areas'>Select area:</label><select class='form-control 'id='areas_s'>")
@@ -89,7 +114,7 @@ function ajaxGetCuisines(){
 
   $.ajax({
     type : "GET",
-    url : "./user/cuisines",
+    url : window.location.origin+"/user/cuisines",
     success: function(result){
       $('#cuisines').empty();
       $('#cuisines').append("<label for='cuisines'>Select cuisine:</label><select class='form-control 'id='cuisines_s'>")
@@ -109,4 +134,6 @@ function ajaxGetCuisines(){
       alert("ERROR "+JSON.stringify(e));
       console.log("ERROR: ", e);
     }
+  });
+}
   });  

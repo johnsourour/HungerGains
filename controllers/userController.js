@@ -7,6 +7,7 @@ var nodemailer = require('nodemailer');
 var app = require('../app.js');
 var bcrypt = require('bcryptjs');
 
+var verifyToken = require('../verifyToken')
 var pp = require('path');
 var path= pp.resolve('./views');
 
@@ -64,7 +65,7 @@ router.post('/signup', function (req, res) {
     if(err){
       res.send(err.sqlMessage);
     }else {
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -90,21 +91,6 @@ router.post('/changeInfo', function (req, res) {
       res.send(err.sqlMessage);
     }else {
        res.send(result);  
-    }
-      });
-  });
-var cur_user = 'johnuser' 
-router.post('/changePassword', function (req, res) {
-  console.log("got change pwd"); 
- // let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8)) 
-  let password = db.NullCheckChar(req.body.password)  
-  var sql = "update User set hashedPwd = " +password + " where username = " + db.NullCheckChar(cur_user);
-  db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
-    if(err){
-      res.send(err.sqlMessage);
-    }else {
-       res.send('Success');  
     }
       });
   });
@@ -154,12 +140,18 @@ router.post('/forgotPassword', function (req, res) {
 
   //FIGURE THIS
 function getDate (Bdate){
-  var day = 1
-  var month = 2
-  var year = 3
+  
+  let dateTimeParts= JSON.stringify(Bdate).split(/[- :]/); 
+  
+
+
+  var day = dateTimeParts[2].substr(0,2)
+  var month = dateTimeParts[1]
+  var year = dateTimeParts[0].slice(1)
+  console.log("bdate "+JSON.stringify(dateTimeParts))
   return [day, month, year]
 }
-router.get('/profile/:user', function (req, res) {
+router.get('/profile/:user',verifyToken.verifyToken, function (req, res) {
   console.log("got get user profile"); 
   if(req.cookies["user"]!=req.params["user"]) //not the best way to do this
   {
@@ -242,7 +234,7 @@ function CheckZeros(value){
   else return "00";
 };
 
-router.get('/restaurantMenu/:name', function (req, res) {
+router.get('/restaurantMenu/:name', verifyToken.verifyToken,function (req, res) {
       var today = new Date();
       var time;
       if(req.body.active=="True"){
@@ -258,7 +250,7 @@ router.get('/restaurantMenu/:name', function (req, res) {
     if(err){
       res.send(err);
     }else {
-      res.send(result);
+      res.render(path+"/menu.html",{rest:req.params["name"]})
     }
       });
   });

@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');
 var db = require('../../db');
+var path = require('path')
+var verifyToken = require((path.resolve('')+'/verifyToken'))
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
@@ -19,12 +21,13 @@ function CheckZeros(value){
  
 
 // GET MENU ITEMS (ACTIVE)
-router.post('/items', function (req, res) {
+router.post('/items', verifyToken.verifyToken,function (req, res) {
   console.log("get Menu Item"); 
   var today = new Date();
   var time = CheckActive(CheckZeros(today.getHours())+""+ CheckZeros(today.getMinutes())+""+ CheckZeros(today.getSeconds()))
 
   var restaurantName = db.NullCheckChar(req.body.restaurantName)
+  var menuType = db.NullCheckChar(req.body.menuType)
   var sql = "select restaurantID from restaurant where restaurantName="+restaurantName+";";
   db.mycon.query(sql, function (err, result) {
       console.log("Result: " + JSON.stringify(result));
@@ -35,9 +38,9 @@ router.post('/items', function (req, res) {
         restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
         var sql2 = "select I.* from restaurantmenu M, restaurantMenuItem I where M.restaurantID = I.restaurantID "+
-        "and M.menuType=I.menutype and "+time;
+        "and M.menuType=I.menutype and I.menuType= " + menuType + " and "+time;
          db.mycon.query(sql2, function (err, result) {
-            console.log("Result: " + JSON.stringify(result));
+            console.log(sql2+"\nResult: " + JSON.stringify(result));
             if(err){
               res.send(err);
             }else {
@@ -52,7 +55,7 @@ router.post('/items', function (req, res) {
   
 
 // GET MENU ITEMS CONFIGS  
-  router.get('/itemConfigs', function (req, res) {
+  router.post('/itemConfigs', function (req, res) {
   console.log("get Menu Item Config"); 
   var restaurantName = db.NullCheckChar(req.body.restaurantName)
   var menuType= db.NullCheckChar(req.body.menuType)
