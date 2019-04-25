@@ -4,7 +4,6 @@ var app = express();
 var db = require('./db');
 var verifyToken = require('./verifyToken')
 var router = express.Router();
-
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
@@ -18,10 +17,6 @@ app.engine('html', engines.mustache);
 app.use(express.static('public'));
  
 var path = __dirname + '/views/';
-
-//app.engine('html', engines.mustache);
-//app.set('view engine', 'html');
-
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -29,8 +24,6 @@ app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
     next();
   });
-//the above function just allows for requests and responses to be 
-//passed to and from backend and frontend 
 
 app.get("/",function(req,res){
   res.sendFile(path+"login.html");
@@ -81,24 +74,16 @@ app.get("/profile" , function(req,res){
     console.log("in home get "+decoded.user+" "+decoded.type)
     if(decoded.type==undefined)
       res.redirect("/404")
-    else 
-      //res.render(path+"profile.html",{user:decoded.user, type:decoded.type, phoneNo:req.params["phoneNo"]})
+    else {
+      res.cookie("user", decoded.user);
       res.redirect('/user/profile/'+decoded.user)
+    }
 
  })
 
 });
 
-app.get("/testcookie" , function(req,res){  
- var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
-    console.log("in home get "+decoded.user+" "+decoded.type)
-    if(decoded.type==undefined)
-      res.redirect("/")
-    else 
-     res.redirect("/home")
- })
 
-});
 app.get("/logout" , function(req,res){  
  res.clearCookie("cookieToken");
  res.redirect("/")

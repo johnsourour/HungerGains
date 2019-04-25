@@ -9,6 +9,7 @@ var bcrypt = require('bcryptjs');
 
 var pp = require('path');
 var path= pp.resolve('./views');
+
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -21,6 +22,7 @@ var generator = require('generate-password');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
+
 
 router.post('/login', function (req, res) {
   
@@ -35,11 +37,10 @@ router.post('/login', function (req, res) {
     console.log("Result: " + json);
     if(err){
       console.log(err);
-      return res.send(err);
+      res.send(err);
     }else {
-      console.log("here");
       
-      return res.send(result)
+      res.send(result)
     }
       });
   });
@@ -88,7 +89,7 @@ router.post('/changeInfo', function (req, res) {
     if(err){
       res.send(err.sqlMessage);
     }else {
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -160,7 +161,10 @@ function getDate (Bdate){
 }
 router.get('/profile/:user', function (req, res) {
   console.log("got get user profile"); 
-  
+  if(req.cookies["user"]!=req.params["user"]) //not the best way to do this
+  {
+    res.redirect("/404");
+  }
   let username = db.NullCheckChar(req.params["user"])
   let sql = "select * from user where username = " + username + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {

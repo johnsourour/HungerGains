@@ -9,9 +9,9 @@ router.use(bodyParser.json());
 var cur_user = 'johnuser' //GET THIS
 
 
-router.get('/all', function (req, res) {
-  console.log("got get user addresses"); 
-  let sql = "select * from userAddress where username = " + db.NullCheckChar(cur_user);
+router.get('/all/:user', function (req, res) {
+  console.log("got get user addresses "+req.params["user"]); 
+  let sql = "select * from userAddress where username = " + db.NullCheckChar(req.params["user"]);
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -60,12 +60,13 @@ router.post('/add', function (req, res) {
       });
   });
 
-router.post('/remove', function (req, res) {
-  console.log("got post user add address"); 
+router.post('/remove/:user/:area/:add', function (req, res) {
+  console.log("got post user remove address " +req.params["add"]); 
   var num = req.body.address_no;
-  let sql = "delete from userAddress where username = " + db.NullCheckChar(cur_user)+ " and userAddNo = " + num;
+  let sql = "delete from userAddress where username = " + db.NullCheckChar(req.params["user"])+ " and areaName="+
+    db.NullCheckChar(req.params["area"])+" and addressLine1= "+ db.NullCheckChar(req.params["add"])
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+    console.log(sql+"\nResult: " + JSON.stringify(result));
     if(err){
       res.send(err.sqlMessage);
     }else {
