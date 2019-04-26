@@ -132,7 +132,6 @@ function addItemPost(id){
         data : JSON.stringify(formData),
         dataType : 'json',
         success: function(result){
-        alert("here bitch")
         var item_id = itemcount.toString()
         itemcount=itemcount + 1
         $('#cartItems').append("<tr id='"+item_id+"'> <td scope='col'>"+itemName+"</td><td scope='col'>"+configName+"</td><td scope='col'>"+
