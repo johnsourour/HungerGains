@@ -69,11 +69,10 @@ app.get("/home" , function(req,res){
 });
 
 
-app.get("/profile" , function(req,res){  
+app.get("/profile", function(req,res){  
  var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
-    console.log("in home get "+decoded.user+" "+decoded.type)
     if(decoded.type==undefined)
-      res.redirect("/404")
+      res.redirect("/")
     else {
       res.cookie("user", decoded.user);
       res.redirect('/user/profile/'+decoded.user)
@@ -91,8 +90,7 @@ app.get("/logout" , function(req,res){
 });
 
 app.post("/home" ,verifyToken.verifyToken, function(req,res){
-  console.log("in home "+JSON.stringify(req.body.token))
-  res.cookie("cookieToken", req.body.token); 
+  
   res.send({});
 });
 

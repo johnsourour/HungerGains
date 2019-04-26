@@ -35,8 +35,7 @@ $( document ).ready(function() {
        window.location.href = "./home"
       },
       error : function(e) {
-        alert("Error!")
-        console.log("ERROR: ", e);
+        alert("Something went wrong")
       }
     });
       
