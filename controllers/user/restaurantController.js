@@ -84,14 +84,15 @@ router.post('/items', verifyToken.verifyToken,function (req, res) {
 
 
 
-var cur_user = 'johnuser' //GET THIS
-var cur_restaurant = 1
 var cur_cart = 3
 var cur_menutype = 'Lunch'
 
 router.post('/menu/createCart', function (req, res) {
   console.log("got post create cart"); 
-  var address_num = req.body.address_num;
+  
+  var cur_user = db.NullCheckChar(req.cookies["user"] )
+  var areaName = db.NullCheckChar(req.body.areaName);
+  var address = db.NullCheckChar(req.body.address);
   var restaurantName = db.NullCheckChar(req.body.restaurantName);
   var discountID = req.body.discountID
   if(discountID==undefined) 
@@ -105,13 +106,33 @@ router.post('/menu/createCart', function (req, res) {
       }else {
         restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
-        var sql2 = "insert into Cart values(null, "+db.NullCheckChar(cur_user)+", "+ address_num+","+restaurantID+","+discountID+", 'Pending');";
-         db.mycon.query(sql2, function (err, result) {
+        var sql2 = "select userAddNo from UserAddress where username="+cur_user+" and areaName =" + areaName +
+        " and addressLine1 = "+ address;
+        db.mycon.query(sql2, function (err, result) {
             console.log("Result: " + JSON.stringify(result));
             if(err){
               res.send(err);
+
             }else {
-              res.send("Success");
+              address_num=result[0].userAddNo
+              console.log("got id: "+restaurantID);
+              var sql3 = "insert into Cart values(null, "+cur_user+", "+ address_num+","+restaurantID+","+discountID+", 'Pending');";
+              db.mycon.query(sql3, function (err, result) {
+                  console.log("Result: " + JSON.stringify(result));
+                  if(err){
+                    res.send(err);
+                  }else {
+                     var sql4 = "SELECT LAST_INSERT_ID() as cartID;";
+                      db.mycon.query(sql4, function (err, result) {
+                          console.log("Result: " + JSON.stringify(result));
+                          if(err){
+                            res.send(err);
+                          }else {
+                            res.send(result);
+                          }
+                            });
+                  }
+                    });
             }
               });
       }
@@ -121,24 +142,34 @@ router.post('/menu/createCart', function (req, res) {
 router.post('/menu/addToCart', function (req, res) {
   console.log("got post add to cart"); 
   
-  var menuType = db.NullCheckChar(cur_menutype); //FRONT END 
-  var restaurantID = cur_restaurant 
-  var cartID = cur_cart // FRONT END
+  var menuType = db.NullCheckChar(req.body.menuType); 
+  var restaurantName = db.NullCheckChar(req.body.restaurantName); 
+  var cartID = req.body.cartID;
 
   var configName = db.NullCheckChar(req.body.configName);
   var itemName = db.NullCheckChar(req.body.itemName);
   var quantity = db.NullCheckNum(req.body.quantity)
   var comment = db.NullCheckChar(req.body.comment)
-  
-  var sql = "insert into CartItem values ("+cartID+","+menuType+","+restaurantID+","+itemName+","+configName+","+quantity+","+comment+")";
+  if(comment=='')comment="NULL"
+  var sql = "select restaurantID from restaurant where restaurantName="+restaurantName;
   db.mycon.query(sql, function (err, result) {
       console.log("Result: " + JSON.stringify(result));
       if(err){
         res.send(err);
 
       }else {
-        res.send("Success")
-      }
+        var restaurantID = result[0].restaurantID
+        var sql2 = "insert into CartItem values ("+cartID+","+menuType+","+restaurantID+","+itemName+","+configName+","+quantity+","+comment+")";
+        db.mycon.query(sql2, function (err, result) {
+            console.log(sql2+"Result: " + JSON.stringify(result));
+            if(err){
+              res.send(err);
+
+            }else {
+              res.send(result)
+            }
+              });
+            }
         });
 });
 

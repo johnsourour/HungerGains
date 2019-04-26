@@ -208,8 +208,8 @@ router.post('/restaurants', function (req, res) {
     }
       });
   });
-
-  router.get('/myOrders', function (req, res) {
+  
+router.post('/myOrders', function (req, res) {
   var cur_user = 'johnuser' // GET THIS
   var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)
   db.mycon.query(sql, function (err, result) {
@@ -221,6 +221,19 @@ router.post('/restaurants', function (req, res) {
     }
       });
   });
+
+  router.post('/getName', function (req, res) {
+    var restaurantID = req.body.restaurantID  // GET THIS
+    var sql = "Select restaurantName from restaurant where restaurantID = "+ restaurantID
+    db.mycon.query(sql, function (err, result) {
+      console.log(sql, "Result: " + JSON.stringify(result));
+      if(err){
+        res.send(err);
+      }else {
+        res.send(result);
+      }
+        });
+    });
 
 function CheckActive(value){
   if(value== null || value==undefined)

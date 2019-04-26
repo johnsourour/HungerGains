@@ -63,7 +63,11 @@ app.get("/home" , function(req,res){
     if(decoded.type==undefined)
       res.redirect("/")
     else 
+    {
+
+      res.cookie("user", decoded.user);
      res.sendFile(path+"home.html")
+    }
  })
 
 });
@@ -74,7 +78,6 @@ app.get("/profile", function(req,res){
     if(decoded.type==undefined)
       res.redirect("/")
     else {
-      res.cookie("user", decoded.user);
       res.redirect('/user/profile/'+decoded.user)
     }
 
@@ -85,6 +88,7 @@ app.get("/profile", function(req,res){
 
 app.get("/logout" , function(req,res){  
  res.clearCookie("cookieToken");
+ res.clearCookie("user");
  res.redirect("/")
 
 });

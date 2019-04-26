@@ -66,12 +66,15 @@
                   <label><input type="radio" name="msel" value="Dinner">Dinner</label>
                   <label><input type="radio" name="msel"value="Dessert">Dessert</label>
               </form>
-           <table class="container py-5 table">
+           <table class="container py-5 table" id="menuItems">
               <thead>
                 <tr>
                   <th scope="col">Item Name</th>
                   <th scope="col">Price</th>
                   <th scope="col">Configurations</th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col"></th>
+                  <th scope="col">Comment</th>
                 </tr>
               </thead>
             
@@ -82,12 +85,30 @@
         </div>
         <div class="column right" style="background-color:#bbb;">
           <!-- start of col 2  -->
-            <div class="container"  style="padding-top:10px;  " >
-              <div class="row" style= "float:right " >
-                  <button type ="submit" class= "btn btn-primary id=">Create Cart 
+          
+          <form class="container py-5" id="cartForm">
+            
+            <div class="form-group" id="areas">
+              <label for="areas">Select Address:</label>
+              <select class="form-control" id ="areas_select" >
+              </select>
+            </div> 
+            <div class="row">
+                <div class="col">
+              <label> Promo Code</label>
+              <input type='text' class="form-control" name="discountCode">
+                </div>
+            </div>
+            <div class = "row">
+            <div class="col" style= "float:right; padding-top:20px; " >
+                  <button type ="submit"  class= "form-control btn btn-primary">Create Cart </button>
               </div>
             </div>
-          <!-- end of col 2  -->
+              <div id="cartRes">
+              </div>
+          
+          </form>
+           
         </div>
     </div>
   </div>
