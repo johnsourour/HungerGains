@@ -21,11 +21,12 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 router.post('/login', function (req, res) {
-  console.log("got post login " + req.body.username +" " +req.body.password); 
   
   let username = db.NullCheckChar(req.body.username)
   //let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8))
+  
   let password = db.NullCheckChar(req.body.password)
+  console.log("got post login " + req.body.username +" " +req.body.password); 
   let sql = "select * from user where username = " + username + " and hashedPwd = " + password + " and userStatusName = 'alive'";
   db.mycon.query(sql, function (err, result) {
     var json = JSON.stringify(result)
@@ -88,7 +89,8 @@ router.post('/forgotPassword', function (req, res) {
     numbers: true
   });
   var username = db.NullCheckChar(req.body.username)
-  var sql = "update User set hashedPwd = " + db.NullCheckChar(bcrypt.hashSync(password, 8)) + " where username = " +username;
+  //var sql = "update User set hashedPwd = " + db.NullCheckChar(bcrypt.hashSync(password, 8)) + " where username = " +username;
+  var sql = "update User set hashedPwd = " + db.NullCheckChar(password) + " where username = " +username;
   db.mycon.query(sql, function (err, result) {
     console.log(sql+"Result: " + JSON.stringify(result));
     if(err){
@@ -115,7 +117,7 @@ router.post('/forgotPassword', function (req, res) {
                     console.log('Email sent: ' + info.response);
                   }
                }); 
-            
+            res.send({})
           }
             });
     }
@@ -144,7 +146,7 @@ router.get('/profile', function (req, res) {
 
 
 function CheckField(key, value){
-  if(value== null || value==undefined)
+  if(value== null || value==undefined || value=="")
     return key;
   return db.NullCheckChar(value);
 };
@@ -155,7 +157,7 @@ function CheckQuery(key, value){
   return value;
 };
 
-router.get('/restaurants', function (req, res) {
+router.post('/restaurants', function (req, res) {
   console.log("got get all restaurants"); 
   var cuisine = CheckField("cuisine", req.body.cuisine);
   var areaName = CheckField("areaName", req.body.areaName);
@@ -186,8 +188,6 @@ router.get('/restaurants', function (req, res) {
       });
   });
 
-
-  var current_restaurant = 'McDonalds'; //GET THIS SOMEHOW
 function CheckActive(value){
   if(value== null || value==undefined)
     return "starthour=starthour";
@@ -200,7 +200,7 @@ function CheckZeros(value){
   else return "00";
 };
 
-router.get('/restaurantMenu', function (req, res) {
+router.get('/restaurantMenu/:name', function (req, res) {
       var today = new Date();
       var time;
       if(req.body.active=="True"){
@@ -210,7 +210,30 @@ router.get('/restaurantMenu', function (req, res) {
       var active = CheckActive(time);
       var menuType = CheckField("menuType", req.body.menuType);
       var sql = "select * from restaurantMenu where restaurantID IN ( select restaurantID from restaurant where restaurantName ="+
-      db.NullCheckChar(current_restaurant) +") and "+active+" and menuType = "+menuType;
+      db.NullCheckChar(req.params["name"]) +") and "+active+" and menuType = "+menuType;
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err);
+    }else {
+      res.send(result);
+    }
+      });
+  });
+
+router.get('/areas', function (req, res) {
+    var sql = "Select * from DeliveryArea;"
+    db.mycon.query(sql, function (err, result) {
+      console.log(sql, "Result: " + JSON.stringify(result));
+      if(err){
+        res.send(err);
+      }else {
+        res.send(result);
+      }
+        });
+    });
+router.get('/cuisines', function (req, res) {
+  var sql = "select * from Cuisine;"
   db.mycon.query(sql, function (err, result) {
     console.log(sql, "Result: " + JSON.stringify(result));
     if(err){
