@@ -1,10 +1,6 @@
 $( document ).ready(function() {
   
-    $("#areas .dropdown-menu").click(function(){
- 
-      $("#areas .btn").text($('#areas_select .selected').text());
-
-   });
+   
 
   // GET REQUEST
   $("#restSearch").submit(function(event){
