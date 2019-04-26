@@ -25,21 +25,30 @@ router.get('/all/:user', function (req, res) {
       });
   });
 
-router.get('/byRestaurant', function (req, res) {
+router.get('/byRestaurant/:rest/', function (req, res) {
   console.log("got get user addresses"); 
-  var restaurantID = req.body.restaurantID
-  let sql = "select * from userAddress where username = " + db.NullCheckChar(cur_user) + " and areaname IN("+
-  "Select areaname from restaurantDeliveryarea where restaurantID = "+restaurantID +");";
+  var restaurantName = db.NullCheckChar(req.params["rest"])
+  var cur_user = db.NullCheckChar(req.cookies["user"])
+  var sql = "select restaurantID from restaurant where restaurantName = "+restaurantName;
+  
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
       res.send(err.sqlMessage);
     }else {
-       if(result.length >0)
-        res.send(result)
-      else 
-         res.send('Fail')  
-    }
+      var restaurantID = result[0].restaurantID
+       var sql2 = "select * from userAddress where username = " + cur_user + " and areaname IN("+
+        "Select areaname from restaurantDeliveryarea where restaurantID = "+restaurantID +");";
+         db.mycon.query(sql2, function (err, result) {
+        console.log("Result: " + JSON.stringify(result));
+        if(err){
+          res.send(err.sqlMessage);
+        }else {
+            res.send(result)
+        }
+          });
+      }
+    
       });
   });
 
