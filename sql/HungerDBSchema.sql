@@ -195,12 +195,16 @@ as (
 	Select DISTINCT CC.cartID, RR.deliveryFee+sum(R.basePrice*IC.ratio*(1+RR.taxPercent)*C.quantity*(1-IF(CC.discountID is NULL,0, d.rate)))
     from Cart CC, CartItem C, RestaurantMenuItem R, Restaurant RR, ItemConfiguration IC, Discount D
     where CC.cartID = C.cartID
-    and  R.menuType = C.menuType
-	and R.restaurantID = C.restaurantID
-    and R.menuItemName = C.menuItemName
+    and CC.restaurantID = C.restaurantID
+    and CC.restaurantID = R.restaurantID
+    and CC.restaurantID = RR.restaurantID
+    and C.configName = IC.configName
+    and C.restaurantID = RR.restaurantID
+    and C.menuType = R.menuType
+    and C.restaurantID  = R.restaurantID
+    and C.menuItemName = R.menuItemName
     and R.restaurantID = RR.restaurantID
-    and IC.configName = C.configName
     and ((D.discountID = CC.discountID and D.expiryDate>CurDate()) or CC.discountID is NULL)
-	group by CC.cartID, D.discountID, RR.deliveryFee, R.basePrice, IC.ratio, RR.taxPercent, C.quantity, D.rate
+	group by CC.cartID, D.discountID
     order by CC.cartID
 );

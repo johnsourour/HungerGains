@@ -208,10 +208,29 @@ router.post('/restaurants', function (req, res) {
     }
       });
   });
-  
-router.post('/myOrders', function (req, res) {
-  var cur_user = 'johnuser' // GET THIS
-  var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)
+router.get('/myOrders/:user', function (req, res) {
+    var cur_user = req.params["user"]
+    if(req.cookies["user"]!=req.params["user"]) //not the best way to do this
+    {
+      res.redirect("/404");
+    }
+    var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)
+    db.mycon.query(sql, function (err, result) {
+      console.log(sql, "Result: " + JSON.stringify(result));
+      if(err){
+        res.send(err);
+      }else {
+        res.render(path+"/order.html", {user:cur_user});
+      }
+        });
+});
+router.post('/myOrders/:user', function (req, res) {
+  var cur_user = req.params["user"]
+  if(req.cookies["user"]!=req.params["user"]) //not the best way to do this
+  {
+    res.redirect("/404");
+  }
+  var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)+" order by CartId"
   db.mycon.query(sql, function (err, result) {
     console.log(sql, "Result: " + JSON.stringify(result));
     if(err){

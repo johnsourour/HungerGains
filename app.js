@@ -73,6 +73,51 @@ app.get("/home" , function(req,res){
 });
 
 
+app.get("/order", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else {
+      res.cookie("user", decoded.user);
+      res.redirect('/user/myOrders/'+decoded.user)
+    }
+
+ })
+
+});
+
+app.get("/staff", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='staff'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.redirect('/staff/viewOrders/'+decoded.user)
+    }
+
+ })
+
+});
+
+app.get("/admin", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='admin'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.render(path+'admin.html',{user:decoded.user})
+    }
+
+ })
+
+});
+
 app.get("/profile", function(req,res){  
  var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
     if(decoded.type==undefined)
@@ -97,6 +142,11 @@ app.post("/home" ,verifyToken.verifyToken, function(req,res){
   
   res.send({});
 });
+
+app.use("/denied",function(req,res){
+  res.sendFile(path + "denied.html");
+});
+
 
 app.use("*",function(req,res){
   res.sendFile(path + "404.html");

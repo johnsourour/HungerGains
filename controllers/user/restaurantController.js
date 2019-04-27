@@ -84,9 +84,6 @@ router.post('/items', verifyToken.verifyToken,function (req, res) {
 
 
 
-var cur_cart = 3
-var cur_menutype = 'Lunch'
-
 router.post('/menu/createCart', function (req, res) {
   console.log("got post create cart"); 
   
@@ -163,10 +160,10 @@ router.post('/menu/addToCart', function (req, res) {
         db.mycon.query(sql2, function (err, result) {
             console.log(sql2+"Result: " + JSON.stringify(result));
             if(err){
-              res.send(err);
+              res.send("no")
 
             }else {
-              res.send(result)
+              res.send("ok");
             }
               });
             }
@@ -176,22 +173,32 @@ router.post('/menu/addToCart', function (req, res) {
 router.post('/menu/removeFromCart', function (req, res) {
   console.log("got post remove from cart"); 
   
-  var menuType = db.NullCheckChar(cur_menutype); //FRONT END 
-  var restaurantID = cur_restaurant 
-  var cartID = cur_cart 
+  var menuType = db.NullCheckChar(req.body.menuType); 
+  var restaurantName = db.NullCheckChar(req.body.restaurantName);  
+  var cartID = req.body.cartID 
 
   var configName = db.NullCheckChar(req.body.configName);
   var itemName = db.NullCheckChar(req.body.itemName);
   
-  var sql = "delete from CartItem where cartID ="+cartID+" and menuType = "+menuType+
-  " and restaurantID = "+restaurantID+" and menuItemName = "+itemName+" and configName = "+configName+";"
+  var sql = "select restaurantID from restaurant where restaurantName = " + restaurantName;
     db.mycon.query(sql, function (err, result) {
         console.log("Result: " + JSON.stringify(result));
       if(err){
-        res.send(err);
+        res.send('no');
 
       }else {
-        res.send("Success")
+        var restaurantID = result[0].restaurantID
+         var sql2 = "delete from CartItem where cartID ="+cartID+" and menuType = "+menuType+
+         " and restaurantID = "+restaurantID+" and menuItemName = "+itemName+" and configName = "+configName+";"
+         db.mycon.query(sql2, function (err, result) {
+          console.log("Result: " + JSON.stringify(result));
+          if(err){
+            res.send('no');
+
+          }else {
+            res.send("Success")
+          }
+            });
       }
         });
 });
@@ -214,11 +221,11 @@ router.get('/menu/getCart', function (req, res) {
       }
         });
 });
-router.get('/menu/getCartTotal', function (req, res) {
+router.post('/menu/getCartTotal', function (req, res) {
   console.log("got cart"); 
   
 
-  var cartID = cur_cart
+  var cartID = req.body.cartID
   
   var sql = "select * from CartTotal where cartID ="+cartID+";"
     db.mycon.query(sql, function (err, result) {
@@ -236,7 +243,7 @@ router.post('/menu/placeOrder', function (req, res) {
   console.log("got cart"); 
   
 
-  var cartID = cur_cart
+  var cartID = req.body.cartID
   
   var sql = "update Cart set statusName='Received' where cartID ="+cartID+";"
     db.mycon.query(sql, function (err, result) {
@@ -245,7 +252,7 @@ router.post('/menu/placeOrder', function (req, res) {
         res.send(err);
 
       }else {
-        res.send("success")
+        res.send(result)
       }
         });
 });

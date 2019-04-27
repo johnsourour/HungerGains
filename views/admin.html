@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+ 
+  <script src="/js/admin.js"></script>
+    <title>Admin Dashboard</title>
+  </head>
+  <body>
+    <div class="py-2 ml-2 mr-2">
+      <nav class="navbar navbar-expand-sm bg-light">
+          <ul class="navbar-nav">
+            <li class="nav-itm">
+              <a class="nav-link" href="/home">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/order">My Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">My Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/staff">Staff</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin">Admin</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          </ul>
+        </nav>
+    </div>
+    <div class="container py-5" style="height: 200px;">
+      <div class="col mx-auto" style="width: 600px;">  
+        <div class="row mx-auto" >       
+          <h2>Add Admin</h2>        
+        </div>
+
+
+        <form id="aaf">
+          <div class="form-group">
+            <label >Username</label>
+            <input type="text" class="form-control" id="uname_aaf" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="pwd_aaf" required>
+          </div>
+          <div class="form-group">
+            <div class = "row">
+               <div class = "col">
+                <label >First Name</label>
+                <input type="text" class="form-control" id="fname_aaf"  required>
+               </div>
+                <div class="col">
+                  <label >Last Name</label>
+                  <input type="text" class="form-control" id="lname_aaf"  required>  
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+             <div class = "row">
+                 <div class = "col-6" >
+                  <label >Phone Number</label>
+                  <input type="text" class="form-control" id="num_aaf"  required>
+                 </div>
+                 <div class="col-2">
+                   <label >Birthday</label>
+                    <input type="text" class="form-control" id="day_aaf" required>
+                 </div>
+                  <div class="col-2">
+                      <label style="color:white;">Birthday</label>
+                       <input type="text" class="form-control" id="month_aaf"  required>
+                  </div>
+                  <div class="col-2">
+                       <label  style="color:white;">Birthday</label>
+                       <input type="text" class="form-control"style="width:60px;" id="year_aaf" required>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group">
+               <label >Email</label>
+                   <input type="text" class="form-control" id="email_aaf"  required>
+          </div>
+          <div class="form-group">
+               <label >Address</label>
+                <input type="text" class="form-control" id="add_aaf"  required>
+          </div>
+          <div class = "row">
+              <div class = "col">
+                <button type="submit" class="btn btn-primary " id="save_aaf">Save</button>
+
+              <div id="res_aaf"></div>
+              </div>
+          </div>
+        </form>
+          
+
+          <!-- here -->
+        
+        <div class="container py-5" >
+              <h2>Change Admin's Password</h2>        
+            </div>
+          <form id="cap">
+            <div class="form-group">
+              <label >Admin Username</label>
+              <input type="text" class="form-control" id="uname_cap" >
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" class="form-control" id="pwd_cap" >
+            </div>
+            <button type="submit" class="btn btn-primary " id="save_cap">Save</button>
+            <div id="res_cap"></div>
+          </form>
+          <!-- end -->
+        
+
+               <!-- here -->
+        <div class="container py-5" >
+              <h2>Remove Admin</h2>        
+            </div>
+          <form id="raf">
+            <div class="form-group">
+              <label >Admin Username</label>
+              <input type="text" class="form-control" id="uname_raf" >
+            </div>
+            
+            <button type="submit" class="btn btn-primary " id="save_raf">Save</button>
+            <div id="res_raf"></div>
+          </form>
+          <!-- end -->
+
+        <!-- here -->
+        <div class="container py-5" >     
+          <h2>Add Ordering Staff</h2>        
+        </div>
+        <form id="asf">
+          <div class="form-group">
+            <label >Username</label>
+            <input type="text" class="form-control" id="uname_asf" required>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" class="form-control" id="pwd_asf" required>
+          </div>
+          <div class="form-group">
+              <div class = "row">
+              <div class = "col">
+                <label >First Name</label>
+                <input type="text" class="form-control" id="fname_asf"  required>
+                </div>
+              <div class="col">
+                  <label >Last Name</label>
+                  <input type="text" class="form-control" id="lname_asf"  required>  
+              </div>
+            </div>
+          </div>
+            <div class="form-group">
+                <div class = "row">
+                  <div class = "col-6" >
+                  <label >Phone Number</label>
+                  <input type="text" class="form-control" id="num_asf"  required>
+                    </div>
+                    <div class="col-2">
+                        <label >Birthday</label>
+                        <input type="text" class="form-control" id="day_asf" required>
+                      </div>
+                      <div class="col-2">
+                          <label style="color:white;">Birthday</label>
+                          <input type="text" class="form-control" id="month_asf"  required>
+                        </div>
+                        <div class="col-2">
+                            <label  style="color:white;">Birthday</label>
+                            <input type="text" class="form-control"style="width:60px;" id="year_asf" required>
+                        </div>
+                    </div>
+                </div>
+      
+                <div class="form-group">
+                    <label >Email</label>
+                    <input type="text" class="form-control" id="email_asf"  required>
+                  </div>
+                <div class="form-group">
+                    <label >Address</label>
+                    <input type="text" class="form-control" id="add_asf"  required>
+                </div>
+          <div class = "row">
+          <div class = "col">
+          <button type="submit" class="btn btn-primary " id="save_asf">Save</button>
+
+          <div id="res_asf"></div>
+          </div>
+          </div>
+          </form>
+          <!-- end -->
+
+
+          <!-- here -->
+        
+        <div class="container py-5" >
+              <h2>Change Ordering Staff's Password</h2>        
+            </div>
+          <form id="csp">
+            <div class="form-group">
+              <label >Admin Username</label>
+              <input type="text" class="form-control" id="uname_csp" >
+            </div>
+            <div class="form-group">
+              <label>New Password</label>
+              <input type="password" class="form-control" id="pwd_csp" >
+            </div>
+            <button type="submit" class="btn btn-primary " id="save_csp">Save</button>
+            <div id="res_csp"></div>
+          </form>
+          <!-- end -->
+        
+           <!-- here -->
+        <div class="container py-5" >
+              <h2>Remove Ordering Staff</h2>        
+        </div>
+          <form id="rsf">
+            <div class="form-group">
+              <label >Admin Username</label>
+              <input type="text" class="form-control" id="uname_rsf" >
+            </div>
+            
+            <button type="submit" class="btn btn-primary " id="save_rsf">Save</button>
+            <div id="res_rsf"></div>
+          </form>
+          <!-- end -->
+
+
+            <!-- here -->
+        <div class="container py-5" >       
+          <h2>Add Restaurant</h2>        
+        </div>
+        <form id="arf">
+          <div class="form-group">
+            <label >Restaurant Name</label>
+            <input type="text" class="form-control" id="name_arf" >
+          </div>
+          <div class="form-group">
+            <label>Cusine</label>
+            <input type="password" class="form-control" id="cusine_arf" >
+          </div>
+          <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Delivery Fee</label>
+                  <input type="text" class="form-control" id="dfee_arf"  required>
+                  </div>
+                <div class="col">
+                    <label >Tax Percentage</label>
+                    <input type="text" class="form-control" id="tax_arf"  required>  
+                </div>
+              </div>
+          </div>
+          <div class="form-group">
+              <div class = "row">
+              <div class = "col">
+                <label >Start Hour </label>
+                <input type="text" class="form-control" id="sh_arf"  required>
+                </div>
+              <div class="col">
+                  <label >End Hour  </label>
+                  <input type="text" class="form-control" id="eh_arf"  required>  
+              </div>
+          </div>
+          
+       </div>
+          <button type="submit" class="btn btn-primary " id="save_arf">Save</button>
+          
+          <div id="res_arf"></div>
+          </form>
+          <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Modify Restaurant</h2>        
+            </div>
+            <form id="mrf">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_mrf" >
+              </div>
+              <div class="form-group">
+                <label>Cusine</label>
+                <input type="password" class="form-control" id="cusine_mrf" >
+              </div>
+              <div class="form-group">
+                  <div class = "row">
+                  <div class = "col">
+                    <label >Delivery Fee</label>
+                    <input type="text" class="form-control" id="dfee_mrf"  required>
+                    </div>
+                  <div class="col">
+                      <label >Tax Percentage</label>
+                      <input type="text" class="form-control" id="tax_mrf"  required>  
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Start Hour </label>
+                  <input type="text" class="form-control" id="sh_mrf"  required>
+                  </div>
+                <div class="col">
+                    <label >End Hour  </label>
+                    <input type="text" class="form-control" id="eh_mrf"  required>  
+                </div>
+              </div>
+               </div>
+             
+              <button type="submit" class="btn btn-primary " id="save_mrf">Save</button>
+    
+              <div id="res_mrf"></div>
+             
+              </form>
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Restaurant</h2>        
+            </div>
+            <form id="rrf">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_rrf" >
+              </div>              
+              <button type="submit" class="btn btn-primary " id="save_rrf">Remove</button>    
+              <div id="res_rrf"></div>
+             
+              </form>
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Add Menu</h2>        
+            </div>
+            <form id="amf">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_amf" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_mmf">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Start Hour </label>
+                  <input type="text" class="form-control" id="sh_amf"  required>
+                  </div>
+                <div class="col">
+                    <label >End Hour  </label>
+                    <input type="text" class="form-control" id="eh_amf"  required>  
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_amf">Add</button>
+    
+              <div id="res_amf"></div>
+             
+              </form>
+
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Modify Menu</h2>        
+            </div>
+            <form id="mmf">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_mmf" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_mmf">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Start Hour </label>
+                  <input type="text" class="form-control" id="sh_mmf"  required>
+                  </div>
+                <div class="col">
+                    <label >End Hour  </label>
+                    <input type="text" class="form-control" id="eh_mmf"  required>  
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_mmf">Add</button>
+    
+              <div id="res_mmf"></div>
+             
+              </form>
+
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Menu</h2>        
+            </div>
+            <form id="rmf">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_rmf" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_rmf">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+              <button type="submit" class="btn btn-primary " id="save_rmf">Add</button>
+    
+              <div id="res_rmf"></div>
+             
+              </form>
+
+               <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Add Menu Item</h2>        
+            </div>
+            <form id="aif">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_aif" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_aif">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col-8">
+                  <label >Item Name </label>
+                  <input type="text" class="form-control" id="in_aif"  required>
+                  </div>
+                <div class="col">
+                    <label >Base Price  </label>
+                    <input type="number" class="form-control" id="bp_aif"  required>  
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_aif">Add</button>
+    
+              <div id="res_aif"></div>
+             
+              </form>
+
+               <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Modify Menu Item</h2>        
+            </div>
+            <form id="mif">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_aif" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_aif">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col-8">
+                  <label >Item Name </label>
+                  <input type="text" class="form-control" id="in_aif"  required>
+                  </div>
+                <div class="col">
+                    <label >Base Price  </label>
+                    <input type="number" class="form-control" id="bp_aif"  required>  
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_aif">Add</button>
+    
+              <div id="res_mif"></div>
+             
+              </form>
+
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Menu Item</h2>        
+            </div>
+            <form id="rif">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_rif" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_rif">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <label>Item Name</label>
+                <input type="password" class="form-control" id="in_rif" >
+              </div>
+              <button type="submit" class="btn btn-primary " id="save_rif">Add</button>
+    
+              <div id="res_rif"></div>
+             
+              </form>
+
+                <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Add Menu Item Configuration</h2>        
+            </div>
+            <form id="aic">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_aic" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_aic">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Item Name </label>
+                  <input type="text" class="form-control" id="in_aic"  required>
+                  </div>
+                <div class="form-group">
+                    <label >Config Name  </label>
+                      <select class="col" style="height:37px;"id ="select_cn_aic">
+                       <option value='Small'>Small</option>
+                       <option value='Regular'>Regular</option>
+                       <option value='Large'>Large</option>
+                       <option value='Combo - Small'>Combo - Small</option>
+                       <option value='Combo - Regular'>Combo - Regular</option>
+                       <option value='Combo - Large'>Combo - Large</option>
+                    </select>
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_aic">Add</button>
+    
+              <div id="res_aic"></div>
+             
+              </form>
+
+
+               <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Modify Menu Item Configuration</h2>        
+            </div>
+            <form id="mic">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_mic" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_mic">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Item Name </label>
+                  <input type="text" class="form-control" id="in_mic"  required>
+                  </div>
+                <div class="form-group">
+                    <label >Config Name  </label>
+                      <select class="col" style="height:37px;"id ="select_cn_mic">
+                       <option value='Small'>Small</option>
+                       <option value='Regular'>Regular</option>
+                       <option value='Large'>Large</option>
+                       <option value='Combo - Small'>Combo - Small</option>
+                       <option value='Combo - Regular'>Combo - Regular</option>
+                       <option value='Combo - Large'>Combo - Large</option>
+                    </select>
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_mic">Add</button>
+    
+              <div id="res_mic"></div>
+             
+              </form>
+
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Menu Item Configuration</h2>        
+            </div>
+            <form id="ric">
+              <div class="form-group">
+                <label >Restaurant Name</label>
+                <input type="text" class="form-control" id="name_ric" >
+              </div>
+              <div class="form-group">
+                    <label >Menu Type </label>
+                      <select class="col"style="height:37px;" id ="select_mtype_ric">
+                       <option value='Breakfast'>Breakfast</option>
+                       <option value='Lunch'>Lunch</option>
+                       <option value='Dinner'>Dinner</option>
+                       <option value='Dessert'>Dessert</option>
+                    </select>
+                </div>
+             <div class="form-group">
+                <div class = "row">
+                <div class = "col">
+                  <label >Item Name </label>
+                  <input type="text" class="form-control" id="in_ric"  required>
+                  </div>
+                <div class="form-group">
+                    <label >Config Name  </label>
+                      <select class="col" style="height:37px;"id ="select_cn_ric">
+                       <option value='Small'>Small</option>
+                       <option value='Regular'>Regular</option>
+                       <option value='Large'>Large</option>
+                       <option value='Combo - Small'>Combo - Small</option>
+                       <option value='Combo - Regular'>Combo - Regular</option>
+                       <option value='Combo - Large'>Combo - Large</option>
+                    </select>
+                </div>
+              </div>
+               </div>
+              <button type="submit" class="btn btn-primary " id="save_ric">Add</button>
+    
+              <div id="res_ric"></div>
+             
+              </form>
+
+              <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Add Discount Code</h2>        
+            </div>
+            <form id="adc">
+              <div class="form-group">
+                  <label >Discount Code</label>
+                  <input type="text" class="form-control" id="code_adc" >
+                </div>
+              <div class="form-group">
+             <div class = "row">
+                
+                 <div class="col">
+                   <label >Expiry Date</label>
+                    <input type="number" placeholder="dd" class="form-control" id="day_adc" required>
+                 </div>
+                  <div class="col">
+                      <label style="color:white;">Birthday</label>
+                       <input type="number" placeholder="mm" class="form-control" id="month_adc"  required>
+                  </div>
+                  <div class="col">
+                       <label  style="color:white;">Birthday</label>
+                       <input type="number" placeholder="yyyy" class="form-control" id="year_adc" required>
+                  </div>
+              </div>
+              </div>
+              <button type="submit" class="btn btn-primary " id="save_adc">Add</button>
+    
+              <div id="res_adc"></div>
+             
+              </form>
+
+
+                <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Modify Discount Code</h2>        
+            </div>
+            <form id="mdc">
+              <div class="form-group">
+                  <label >Discount Code</label>
+                  <input type="text" class="form-control" id="code_mdc" >
+                </div>
+              <div class="form-group">
+             <div class = "row">
+                
+                 <div class="col">
+                   <label >Expiry Date</label>
+                    <input type="number" placeholder="dd" class="form-control" id="day_mdc" required>
+                 </div>
+                  <div class="col">
+                      <label style="color:white;">Birthday</label>
+                       <input type="number" placeholder="mm" class="form-control" id="month_mdc"  required>
+                  </div>
+                  <div class="col">
+                       <label  style="color:white;">Birthday</label>
+                       <input type="number" placeholder="yyyy" class="form-control" id="year_mdc" required>
+                  </div>
+              </div>
+              </div>
+              <button type="submit" class="btn btn-primary " id="save_mdc">Add</button>
+    
+              <div id="res_mdc"></div>
+             
+              </form>
+
+                 <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Discount Code</h2>        
+            </div>
+            <form id="rdc">
+              <div class="form-group">
+                  <label >Discount Code</label>
+                  <input type="text" class="form-control" id="code_rdc" >
+                </div>
+              
+              <button type="submit" class="btn btn-primary " id="save_rdc">Add</button>
+    
+              <div id="res_rdc"></div>
+             
+              </form>
+              
+
+      </div>
+
+    </div>
+  </body>
+</html>

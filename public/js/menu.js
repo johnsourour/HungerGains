@@ -1,14 +1,31 @@
-var itemcount = 0;
+
 $( document ).ready(function() {
   
   $("#menuSelect").change(function() {
     
     ajaxGet($("input[name='msel']:checked").val());
   });
+
+// Add to Cart Buttons
  $(document).on("click", 'button[id$="_b"]', function(){
    //event.preventDefault();
    
   addItemPost(this.id);
+})
+// Remove from Cart Buttons
+ $(document).on("click", 'button[id$="_ib"]', function(){
+   //event.preventDefault();
+   
+  removeItemPost(this);
+})
+ $(document).on("click", '#placeOrder', function(){
+   //event.preventDefault();
+  placeOrderPost();
+})
+
+$(document).on("click", '#calcOrder', function(){
+   //event.preventDefault();
+  calcOrderPost();
   })
 
 // GET REQUEST
@@ -76,8 +93,8 @@ function ajaxGet(menu){
             dd+="</select></td>"
           dd+="<td><input type='number' style='width:40px;' id='"+id+"_q' placeholder='0'></input></td>" 
           var cur_id = id+"_b"         
-          dd+="<td><button class='btn btn-primary' id='"+cur_id+"'> Add </button></td>"
-          dd+="<td><input type='text' id='"+id+"_c'> </input></td></tr>"
+          dd+="<td><input type='text' id='"+id+"_c'> </input></td>"
+          dd+="<td><button class='btn btn-primary' id='"+cur_id+"'> Add </button></td></tr>"
           $('#itemrest').append(dd)
           },
           error : function(e) {
@@ -130,17 +147,61 @@ function addItemPost(id){
         contentType : "application/json",
         url : url,
         data : JSON.stringify(formData),
-        dataType : 'json',
+        dataType : 'text',
         success: function(result){
-        var item_id = itemcount.toString()
-        itemcount=itemcount + 1
-        $('#cartItems').append("<tr id='"+item_id+"'> <td scope='col'>"+itemName+"</td><td scope='col'>"+configName+"</td><td scope='col'>"+
-        comment+"</td><td scope='col'>"+quantity+"</td><td scope='col'><button class='btn btn-danger' id='"+item_id+"_ib'>Remove</button></td></tr>")
-   
-  
+
+          var item_id = menuType.replace(/\s/g, '_')+"#"+itemName.replace(/\s/g, '_')+"#"+configName.replace(/\s/g, '_')
+         // alert(item_id)
+          if(result=='ok'){
+            $('#cartItems').append("<tr id='"+item_id+"'> <td scope='col'>"+itemName+"</td><td scope='col'>"+configName+"</td><td scope='col'>"+
+            comment+"</td><td scope = 'col> <input id='"+item_id+"_q' type='number' disabled>"+quantity+"</input></td><td scope='col'><button class='btn btn-danger' id='"+item_id+"_ib'>Remove</button></td></tr>")
+          }
+          else alert("remove item and re add")
         },
         error : function(e) {
-          alert("Error in select")
+          alert("Error connecting to server")
+        }
+    }); 
+  
+}
+
+function removeItemPost(row){
+  var id = row.id
+  id = id.substr(0, id.length-3)
+  var menuType = id.substr(0, id.indexOf('#')); 
+  menuType = menuType.replace(/_/g, '')
+  var itemName = id.slice(menuType.length + 1)
+  itemName = itemName.substr(0, itemName.indexOf('#')); 
+  itemName = itemName.replace(/_/g,' ')
+  var configName =  id.slice(menuType.length + 1 +itemName.length + 1)
+  configName = configName.replace(/_/g,' ')
+  var cartID =  $("#cartID").val() 
+  var restaurantName = $("#rest").val() 
+  var url = window.location.origin+"/user/restaurant/menu/removeFromCart/"
+  var formData = {
+    menuType : menuType,
+    restaurantName : restaurantName,
+    cartID  : cartID, 
+    configName : configName, 
+    itemName : itemName
+  }
+  alert(JSON.stringify(formData))
+   $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'text',
+        success: function(result){
+            if(result=="Success"){
+               $(row).closest('tr').remove();
+            }
+            else{
+              alert("Something went wrong")
+            }
+        },
+        error : function(e) {
+          alert("Couldn't send the request to server")
         }
     }); 
   
@@ -169,13 +230,67 @@ function ajaxCreateCart(){
         dataType : 'json',
         success: function(result){
         $('#cartForm').empty();
-        $('#cartForm').append("<input type='text' id='cartID' value='"+result[0].cartID+"' hidden></input><p> Cart Created </p>"+
+        $('#cartForm').append("<input type='text' id='cartID' value='"+result[0].cartID+"' hidden></input><h2> My Cart </h2>"+
         "<table class='container py-5 table' id='cartItems'> <thead><tr> <th scope='col'>Name</th> <th scope='col'>Config</th> "+
-        "<th scope='col'>Comment</th> <th scope='col'>Quantity</th><th scope='col'></th></tr> </thead><tbody id='cartItems'> </tbody> </table>");
+        "<th scope='col'>Comment</th> <th scope='col'>Quantity</th><th scope='col'></th></tr> </thead><tbody id='cartItems'> </tbody> </table>" +
+        "<div class='container py-1'><button class=' form-control btn btn-primary' id='calcOrder'>Calculate Total</button></div>"+
+        "<div id='calcRes'></div><div class='container py-1'><button type='submit'"+
+        " class='form-control btn btn-success' id='placeOrder'>Place Order</button></div>");
   
         },
         error : function(e) {
           alert("Error in select")
+        }
+    }); 
+  
+}
+
+
+function placeOrderPost(){
+  
+  var cartID =  $("#cartID").val() 
+  var url = window.location.origin+"/user/restaurant/menu/placeOrder/"
+  var formData = {
+    cartID  : cartID
+  }
+   $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success: function(result){
+
+          window.location.href = window.location.origin + "/order"
+        },
+        error : function(e) {
+          alert("Error connecting to server")
+        }
+    }); 
+  
+}
+
+function calcOrderPost(){
+  
+  var cartID =  $("#cartID").val() 
+  var url = window.location.origin+"/user/restaurant/menu/getCartTotal/"
+  var formData = {
+    cartID  : cartID
+  }
+   $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success: function(result){
+          alert(JSON.stringify(result[0]))
+          $('#calcRes').empty();
+          $('#calcRes').html("<div class='container'><p> Total = "+result[0].total+"</p></div>");
+          
+        },
+        error : function(e) {
+          alert("Error connecting to server")
         }
     }); 
   

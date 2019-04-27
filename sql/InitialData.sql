@@ -112,6 +112,8 @@ VALUES('Combo - Large', 1.25);
 Insert into user
 Values('johnuser', 'end_user', '88172381238', 'user@email', 'john', 'user', 'userpwd', null, 'alive');
 Insert into user
+Values('johnstaff', 'staff', '82381238', 'usser@email', 'john', 'user', 'staff', null, 'alive');
+Insert into user
 Values('johnadmin', 'admin', '55381238', 'admin@email', 'john', 'admin', 'adminpwd', null, 'alive');
 
 Insert into user

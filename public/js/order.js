@@ -35,7 +35,7 @@ function ajaxGet(){
   
   $.ajax({
     type : "POST",
-    url : window.location.origin + "/user/myOrders",
+    url : window.location.origin + "/user/myOrders/" + $("#uname").val(),
     success: function(result){
       
       $('#orders').empty();
