@@ -200,7 +200,7 @@ router.post('/restaurants', function (req, res) {
   var sql = "select * from restaurant where restaurantID IN ( select restaurantID from restaurantdeliveryarea where areaName ="+ areaName+
     " and restaurantID IN  (select restaurantID from restaurant where restaurantName like " + search +")) and cuisine = "+ cuisine
   db.mycon.query(sql, function (err, result) {
-    console.log(sql, "Result: " + JSON.stringify(result));
+    console.log("Result: " + JSON.stringify(result));
     if(err){
       res.send(err);
     }else {

@@ -13,7 +13,8 @@
   <script src="/js/admin.js"></script>
     <title>Admin Dashboard</title>
   </head>
-  <body>
+  <body>  
+    <input value={{user}} id="user" hidden></input>
     <div class="py-2 ml-2 mr-2">
       <nav class="navbar navbar-expand-sm bg-light">
           <ul class="navbar-nav">
@@ -90,10 +91,6 @@
                <label >Email</label>
                    <input type="text" class="form-control" id="email_aaf"  required>
           </div>
-          <div class="form-group">
-               <label >Address</label>
-                <input type="text" class="form-control" id="add_aaf"  required>
-          </div>
           <div class = "row">
               <div class = "col">
                 <button type="submit" class="btn btn-primary " id="save_aaf">Save</button>
@@ -110,9 +107,9 @@
               <h2>Change Admin's Password</h2>        
             </div>
           <form id="cap">
-            <div class="form-group">
+            <div class="form-group" id="admins_cap">
               <label >Admin Username</label>
-              <input type="text" class="form-control" id="uname_cap" >
+              <select class="form-control" id="admins_select_cap" ></select>
             </div>
             <div class="form-group">
               <label>New Password</label>
@@ -129,9 +126,9 @@
               <h2>Remove Admin</h2>        
             </div>
           <form id="raf">
-            <div class="form-group">
+            <div class="form-group" id="admins_raf">
               <label >Admin Username</label>
-              <input type="text" class="form-control" id="uname_raf" >
+              <select class="form-control" id="admins_select_raf" ></select>
             </div>
             
             <button type="submit" class="btn btn-primary " id="save_raf">Save</button>
@@ -189,10 +186,6 @@
                     <label >Email</label>
                     <input type="text" class="form-control" id="email_asf"  required>
                   </div>
-                <div class="form-group">
-                    <label >Address</label>
-                    <input type="text" class="form-control" id="add_asf"  required>
-                </div>
           <div class = "row">
           <div class = "col">
           <button type="submit" class="btn btn-primary " id="save_asf">Save</button>
@@ -210,11 +203,11 @@
               <h2>Change Ordering Staff's Password</h2>        
             </div>
           <form id="csp">
-            <div class="form-group">
-              <label >Admin Username</label>
-              <input type="text" class="form-control" id="uname_csp" >
+            <div class="form-group" id="staffs_csp">
+              <label >Staff Username</label>
+              <select class="form-control" id="staffs_select_csp" ></select>
             </div>
-            <div class="form-group">
+            <div class="form-group" >
               <label>New Password</label>
               <input type="password" class="form-control" id="pwd_csp" >
             </div>
@@ -228,9 +221,9 @@
               <h2>Remove Ordering Staff</h2>        
         </div>
           <form id="rsf">
-            <div class="form-group">
-              <label >Admin Username</label>
-              <input type="text" class="form-control" id="uname_rsf" >
+            <div class="form-group"id="staffs_rsf">
+              <label >Staff Username</label>
+              <select class="form-control" id="staffs_select_rsf" ></select>
             </div>
             
             <button type="submit" class="btn btn-primary " id="save_rsf">Save</button>
@@ -244,13 +237,17 @@
           <h2>Add Restaurant</h2>        
         </div>
         <form id="arf">
-          <div class="form-group">
+          <div class="form-group" id="rests_arf">
             <label >Restaurant Name</label>
             <input type="text" class="form-control" id="name_arf" >
           </div>
+          <div class="form-group" id="cuisines_arf">
+            <label>Cuisine</label>
+            <select  class="form-control" id="cuisines_select_arf" ></select>
+          </div>
           <div class="form-group">
-            <label>Cusine</label>
-            <input type="password" class="form-control" id="cusine_arf" >
+            <label>Address</label>
+            <input type="text" class="form-control" id="add_arf" >
           </div>
           <div class="form-group">
                 <div class = "row">
@@ -288,13 +285,17 @@
               <h2>Modify Restaurant</h2>        
             </div>
             <form id="mrf">
-              <div class="form-group">
+              <div class="form-group" id="rests_mrf">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_mrf" >
+                <select  class="form-control" id="rests_select_mrf" ></select>
+              </div>
+              <div class="form-group" id="cuisines_mrf">
+                <label>Cuisine</label>
+                <select  class="form-control" id="cuisines_select_mrf" ></select>
               </div>
               <div class="form-group">
-                <label>Cusine</label>
-                <input type="password" class="form-control" id="cusine_mrf" >
+                <label>Address</label>
+                <input type="text" class="form-control" id="add_mrf" >
               </div>
               <div class="form-group">
                   <div class = "row">
@@ -333,12 +334,55 @@
               <h2>Remove Restaurant</h2>        
             </div>
             <form id="rrf">
-              <div class="form-group">
+              <div class="form-group" id = "rests_rrf">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_rrf" >
+                <select type="text" class="form-control" id="rests_select_rrf" ></select>
               </div>              
               <button type="submit" class="btn btn-primary " id="save_rrf">Remove</button>    
               <div id="res_rrf"></div>
+             
+              </form>
+
+           <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Add Delivery Area</h2>        
+            </div>
+            <form id="daf">
+              <div class="form-group" id="rests_daf">
+                <label >Restaurant Name</label>
+                <select class="form-control" id="rests_select_daf" ></select>
+              </div>
+              <div class="form-group" id="areas_daf">
+                    <label >Area: </label>
+                      <select class="col"style="height:37px;" id ="areas_select_daf">
+                    </select>
+                </div>
+              <button type="submit" class="btn btn-primary " id="save_daf">Add</button>
+    
+              <div id="res_daf"></div>
+             
+              </form>
+        <!-- end -->
+
+          <!-- here -->
+            <div class="container py-5" >      
+              <h2>Remove Delivery Area</h2>        
+            </div>
+            <form id="drf">
+              <div class="form-group" id="rests_drf">
+                <label >Restaurant Name</label>
+                <select class="form-control" id="rests_select_drf" ></select>
+              </div>
+              <div class="form-group" id="areas_drf">
+                    <label >Area: </label>
+                      <select class="col"style="height:37px;" id ="areas_select_drf">
+                    </select>
+                </div>
+              <button type="submit" class="btn btn-primary " id="save_drf">Remove</button>
+    
+              <div id="res_drf"></div>
              
               </form>
               <!-- end -->
@@ -348,13 +392,13 @@
               <h2>Add Menu</h2>        
             </div>
             <form id="amf">
-              <div class="form-group">
+              <div class="form-group" id="rests_amf">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_amf" >
+                <select class="form-control" id="rests_select_amf" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
-                      <select class="col"style="height:37px;" id ="select_mtype_mmf">
+                      <select class="col"style="height:37px;" id ="select_mtype_amf">
                        <option value='Breakfast'>Breakfast</option>
                        <option value='Lunch'>Lunch</option>
                        <option value='Dinner'>Dinner</option>
@@ -386,9 +430,9 @@
               <h2>Modify Menu</h2>        
             </div>
             <form id="mmf">
-              <div class="form-group">
+              <div class="form-group" id="rests_mmf">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_mmf" >
+                <select class="form-control" id="rests_select_mmf" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -424,9 +468,9 @@
               <h2>Remove Menu</h2>        
             </div>
             <form id="rmf">
-              <div class="form-group">
+              <div class="form-group" id="rests_rmf">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_rmf" >
+                <select class="form-control" id="rests_select_rmf" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -450,9 +494,9 @@
               <h2>Add Menu Item</h2>        
             </div>
             <form id="aif">
-              <div class="form-group">
+              <div class="form-group" id="rests_aif">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_aif" >
+                <select class="form-control" id="rests_select_aif" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -488,13 +532,13 @@
               <h2>Modify Menu Item</h2>        
             </div>
             <form id="mif">
-              <div class="form-group">
+              <div class="form-group" id="rests_mif">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_aif" >
+                <select class="form-control" id="rests_select_mif" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
-                      <select class="col"style="height:37px;" id ="select_mtype_aif">
+                      <select class="col"style="height:37px;" id ="select_mtype_mif">
                        <option value='Breakfast'>Breakfast</option>
                        <option value='Lunch'>Lunch</option>
                        <option value='Dinner'>Dinner</option>
@@ -505,15 +549,15 @@
                 <div class = "row">
                 <div class = "col-8">
                   <label >Item Name </label>
-                  <input type="text" class="form-control" id="in_aif"  required>
+                  <input type="text" class="form-control" id="in_mif"  required>
                   </div>
                 <div class="col">
                     <label >Base Price  </label>
-                    <input type="number" class="form-control" id="bp_aif"  required>  
+                    <input type="number" class="form-control" id="bp_mif"  required>  
                 </div>
               </div>
                </div>
-              <button type="submit" class="btn btn-primary " id="save_aif">Add</button>
+              <button type="submit" class="btn btn-primary " id="save_mif">Add</button>
     
               <div id="res_mif"></div>
              
@@ -526,9 +570,9 @@
               <h2>Remove Menu Item</h2>        
             </div>
             <form id="rif">
-              <div class="form-group">
+              <div class="form-group" id="rests_rif">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_rif" >
+                <select class="form-control" id="rests_select_rif" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -556,9 +600,9 @@
               <h2>Add Menu Item Configuration</h2>        
             </div>
             <form id="aic">
-              <div class="form-group">
+              <div class="form-group" id="rests_aic">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_aic" >
+                <select type="text" class="form-control" id="rests_select_aic" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -602,9 +646,9 @@
               <h2>Modify Menu Item Configuration</h2>        
             </div>
             <form id="mic">
-              <div class="form-group">
+              <div class="form-group" id="rests_mic">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_mic" >
+                <select class="form-control" id="rests_select_mic" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -647,9 +691,9 @@
               <h2>Remove Menu Item Configuration</h2>        
             </div>
             <form id="ric">
-              <div class="form-group">
+              <div class="form-group" id="rests_ric">
                 <label >Restaurant Name</label>
-                <input type="text" class="form-control" id="name_ric" >
+                <select class="form-control" id="rests_select_ric" ></select>
               </div>
               <div class="form-group">
                     <label >Menu Type </label>
@@ -727,9 +771,9 @@
               <h2>Modify Discount Code</h2>        
             </div>
             <form id="mdc">
-              <div class="form-group">
+              <div class="form-group" id="codes_mdc">
                   <label >Discount Code</label>
-                  <input type="text" class="form-control" id="code_mdc" >
+                  <select type="text" class="form-control" id="codes_select_mdc" ></select>
                 </div>
               <div class="form-group">
              <div class = "row">
@@ -761,9 +805,9 @@
               <h2>Remove Discount Code</h2>        
             </div>
             <form id="rdc">
-              <div class="form-group">
+              <div class="form-group" id="codes_rdc">
                   <label >Discount Code</label>
-                  <input type="text" class="form-control" id="code_rdc" >
+                  <select type="text" class="form-control" id="codes_select_rdc" ></select>
                 </div>
               
               <button type="submit" class="btn btn-primary " id="save_rdc">Add</button>

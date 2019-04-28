@@ -6,7 +6,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-var cur_restaurant = 'McDonalds' //GET THIS
 
 router.get('/viewMenu', function (req, res) {
   console.log("got get restaurantMenu"); 
@@ -47,15 +46,17 @@ router.post('/addMenu', function (req, res) {
         res.send(err);
 
       }else {
-        restaurantID=result[0].restaurantID
+        var restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
         var sql2 = "insert into restaurantMenu values(" + menuType+","+restaurantID+","+startHour+","+endHour+");";
          db.mycon.query(sql2, function (err, result) {
-            console.log("Result: " + JSON.stringify(result));
+            console.log( "Result: " + JSON.stringify(result));
             if(err){
               res.send(err);
-            }else {
-              res.send("Success");
+            }
+            
+            else {
+              res.send(result);
             }
               });
       }
@@ -71,7 +72,7 @@ router.post('/addMenu', function (req, res) {
   var sql = "select restaurantID from restaurant where restaurantName="+restaurantName+";";
   db.mycon.query(sql, function (err, result) {
       console.log("Result: " + JSON.stringify(result));
-      if(err){
+      if(err || result==undefined){
         res.send(err);
 
       }else {
@@ -82,8 +83,10 @@ router.post('/addMenu', function (req, res) {
             console.log("Result: " + JSON.stringify(result));
             if(err){
               res.send(err);
-            }else {
-              res.send("Success");
+            }
+            else if(result.length==0)res.send("");
+            else {
+              res.send(result);
             }
               });
       }
@@ -109,7 +112,7 @@ router.post('/addMenu', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }

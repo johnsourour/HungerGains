@@ -6,27 +6,57 @@ var app = express();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
-var current_admin = 'johnadmin' //GET THIS SOMEWAY
+
+router.get('/admins', function (req, res) {
+  var current_admin = db.NullCheckChar(req.cookies["user"])
+  
+  let sql = "select * from user where userStatusName='alive' and usertype='admin' and username not in ("+current_admin+")";
+
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      console.log(err)
+      res.send(err.sqlMessage);
+    }else {
+      res.send(result);
+    }
+      });
+  });
+
+  router.get('/staffs', function (req, res) {
+  
+  let sql = "select * from user where userStatusName='alive' and usertype='staff'";
+
+  db.mycon.query(sql, function (err, result) {
+    console.log(sql, "Result: " + JSON.stringify(result));
+    if(err){
+      console.log(err)
+      res.send(err.sqlMessage);
+    }else {
+      res.send(result);
+    }
+      });
+  });
 
 router.post('/CreateAdmin', function (req, res) {
   console.log("got post request add admin"); 
   
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)  //HASH IT HERE 
   let userType = "'admin'"
   let phoneNo = db.NullCheckChar(req.body.phoneNo)
-  let addressLine1 = db.NullCheckChar(req.body.addressLine1)
-  let addressLine2 = db.NullCheckChar(req.body.addressLine2)
   let email = db.NullCheckChar(req.body.email)
   let Fname = db.NullCheckChar(req.body.Fname)
   let Lname = db.NullCheckChar(req.body.Lname)  
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
-  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," + addressLine1+ "," + addressLine2+ "," +
+  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+  "," +
            email + "," + Fname + "," + Lname + "," + password + "," + date+ " , 'alive')";
 
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+    console.log(sql, "Result: " + JSON.stringify(result));
     if(err){
+      console.log(err)
       res.send(err.sqlMessage);
     }else {
       let sql2 = "insert into log values( current_timestamp(), 'create_admin', " + db.NullCheckChar(current_admin) + " , " + username + ")";
@@ -36,7 +66,7 @@ router.post('/CreateAdmin', function (req, res) {
         res.send(err.sqlMessage);
         });
   
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -44,6 +74,7 @@ router.post('/CreateAdmin', function (req, res) {
 router.post('/ChangeAdminPassword', function (req, res) {
   console.log("got post request change admin password"); 
   
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)  //HASH IT HERE 
   let userType = "'admin'"
@@ -61,7 +92,7 @@ router.post('/ChangeAdminPassword', function (req, res) {
         res.send(err.sqlMessage);
         });
   
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -69,6 +100,7 @@ router.post('/ChangeAdminPassword', function (req, res) {
 router.post('/RemoveAdmin', function (req, res) {
   console.log("got post request remove admin"); 
   
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let userType = "'admin'"
   let sql = "update user set userStatusName = 'dead' where username = " + username + " and userType = " + userType;
@@ -85,7 +117,7 @@ router.post('/RemoveAdmin', function (req, res) {
         res.send(err.sqlMessage);
         });
   
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -95,39 +127,42 @@ router.post('/RemoveAdmin', function (req, res) {
 router.post('/CreateStaff', function (req, res) {
   console.log("got post request add staff"); 
   
+  
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)  //HASH IT HERE 
   let userType = "'staff'"
   let phoneNo = db.NullCheckChar(req.body.phoneNo)
-  let addressLine1 = db.NullCheckChar(req.body.addressLine1)
-  let addressLine2 = db.NullCheckChar(req.body.addressLine2)
   let email = db.NullCheckChar(req.body.email)
   let Fname = db.NullCheckChar(req.body.Fname)
   let Lname = db.NullCheckChar(req.body.Lname)  
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
-  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," + addressLine1+ "," + addressLine2+ "," +
+  let sql = "insert into user values( " + username + "," + userType+ "," +  phoneNo+ "," +
            email + "," + Fname + "," + Lname + "," + password + "," + date+ ", 'alive')";
 
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+    console.log(sql+"Result: " + JSON.stringify(result));
     if(err){
       res.send(err.sqlMessage);
     }else {
-      let sql2 = "insert into log values( current_timestamp(), 'create_staff', " + db.NullCheckChar(current_admin) + " , " + username + ")";
+      let sql2 = "insert into log values( current_timestamp(), 'create_staff', " + db.NullCheckChar(current_admin) +
+       " , " + username + ")";
       db.mycon.query(sql2, function (err, result) {
-      console.log("Result: " + JSON.stringify(result));
-      if(err)
-        res.send(err.sqlMessage);
-        });
-  
-       res.send('Success');  
+        console.log("Result: " + JSON.stringify(result));
+        if(err)   
+          res.send(err.sqlMessage);
+        else 
+        res.send(result);  
+      });
     }
+    
       });
   });
 
 router.post('/ChangeStaffPassword', function (req, res) {
   console.log("got post request change staff password"); 
-  
+
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let password = db.NullCheckChar(req.body.password)  //HASH IT HERE 
   let userType = "'staff'"
@@ -145,7 +180,7 @@ router.post('/ChangeStaffPassword', function (req, res) {
         res.send(err.sqlMessage);
         });
   
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });
@@ -154,6 +189,7 @@ router.post('/ChangeStaffPassword', function (req, res) {
 router.post('/RemoveStaff', function (req, res) {
   console.log("got post request remove staff"); 
   
+  var current_admin = req.cookies["user"]
   let username = db.NullCheckChar(req.body.username)
   let userType = "'staff'"
   let sql = "update user set userStatusName = 'dead'  where username = " + username + " and userType = " + userType;
@@ -170,7 +206,7 @@ router.post('/RemoveStaff', function (req, res) {
         res.send(err.sqlMessage);
         });
   
-       res.send('Success');  
+       res.send(result);  
     }
       });
   });

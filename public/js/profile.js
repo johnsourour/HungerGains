@@ -140,7 +140,7 @@ $( document ).ready(function() {
                 }));
         });
         
-        $("#areas_m_select").append("</select>")
+        $("#areas_m").append("</select>")
         
         },
       error : function(e) {

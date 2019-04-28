@@ -6,23 +6,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 
-  
 
-router.post('/add', function (req, res) {
-  console.log("got post add restaurant");
-  var name = db.NullCheckChar(req.body.restaurant_name); 
-  var cuisine = db.NullCheckChar(req.body.cuisine); 
-  var deliveryFee = db.NullCheckNum(req.body.deliveryFee); 
-  var address = db.NullCheckChar(req.body.address); 
-  var taxPercent = db.NullCheckNum(req.body.taxPercent); 
-  var startHour = db.NullCheckChar(req.body.startHour);
-  var endHour = db.NullCheckChar(req.body.endHour);
-  if(taxPercent<0.0 || taxPercent>1.0){
-    res.send("wrong params");
-    return;
-  }
-  var sql = "insert into restaurant Values(null, "+name +","+cuisine +","+deliveryFee +","+address +","+taxPercent +","+
-        startHour + ","+ endHour +");";
+router.get('/all', function (req, res) {
+  console.log("got get all restaurant");
+  var sql = "select * from restaurant";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -33,11 +20,10 @@ router.post('/add', function (req, res) {
       });
   });
 
-router.post('/modify', function (req, res) {
-  console.log("got post modify restaurant");
 
-  var restaurantID = req.body.restaurantID;
-  var name = db.NullCheckChar(req.body.restaurant_name); 
+router.post('/add', function (req, res) {
+  console.log("got post add restaurant");
+  var name = db.NullCheckChar(req.body.restaurantName); 
   var cuisine = db.NullCheckChar(req.body.cuisine); 
   var deliveryFee = db.NullCheckNum(req.body.deliveryFee); 
   var address = db.NullCheckChar(req.body.address); 
@@ -45,19 +31,55 @@ router.post('/modify', function (req, res) {
   var startHour = db.NullCheckChar(req.body.startHour);
   var endHour = db.NullCheckChar(req.body.endHour);
   if(taxPercent<0.0 || taxPercent>1.0){
-    res.send("wrong params");
+    res.send("wrong");
     return;
   }
-  var sql = "update restaurant set restaurantName = "+name +", cuisine = "+cuisine +", deliveryFee = "+
-        deliveryFee +", rest_add = "+address +", taxPercent = "+taxPercent +
-         ", startHour = "+         startHour+", endHour = "+endHour+
-        " where restaurantID = "+restaurantID;
+  var sql = "insert into restaurant Values(null, "+name +","+cuisine +","+deliveryFee +","+address +","+taxPercent +","+
+        startHour + ","+ endHour +");";
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
-      res.send(err);
+      res.send("no");
     }else {
-      res.send("success");
+      res.send("ok");
+    }
+      });
+  });
+
+router.post('/modify', function (req, res) {
+  console.log("got post modify restaurant");
+
+  var restaurantName = db.NullCheckChar(req.body.restaurantName);
+  var cuisine = db.NullCheckChar(req.body.cuisine); 
+  var deliveryFee = db.NullCheckNum(req.body.deliveryFee); 
+  var address = db.NullCheckChar(req.body.address); 
+  var taxPercent = db.NullCheckNum(req.body.taxPercent); 
+  var startHour = db.NullCheckChar(req.body.startHour);
+  var endHour = db.NullCheckChar(req.body.endHour);
+  if(taxPercent<0.0 || taxPercent>1.0){
+    res.send("wrong");
+    return;
+  }
+  var sql = "select restaurantID from restaurant where restaurantName = "+restaurantName;
+  db.mycon.query(sql, function (err, result) {
+    console.log("Result: " + JSON.stringify(result));
+    if(err){
+      res.send("no");
+    }else {
+      var restaurantID = result[0].restaurantID
+      var sql2 = "update restaurant set cuisine = "+cuisine +", deliveryFee = "+
+                deliveryFee +", rest_add = "+address +", taxPercent = "+taxPercent +
+                ", startHour = "+         startHour+", endHour = "+endHour+
+                " where restaurantID = "+restaurantID;
+          db.mycon.query(sql2, function (err, result) {
+            console.log(sql2, "Result: " + JSON.stringify(result));
+            if(err){
+              res.send("no");
+            }else {
+              res.send("ok");
+            }
+              });
+         
     }
       });
   });
@@ -65,8 +87,8 @@ router.post('/modify', function (req, res) {
 
 router.post('/remove', function (req, res) {
   console.log("got post remove restaurant");
-  var restaurantID = req.body.restaurantID;
-  var sql = "delete from restaurant where restaurantID = " + restaurantID;
+  var restaurantName = db.NullCheckChar(req.body.restaurantName);
+  var sql = "delete from restaurant where restaurantName = " + restaurantName;
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
@@ -99,7 +121,7 @@ router.post('/addArea', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
@@ -150,7 +172,7 @@ router.get('/areas', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
