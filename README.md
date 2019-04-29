@@ -17,9 +17,9 @@ Basic online food ordering website with simple Bootstrap 4 UI, NodeJS and MySQL 
 2. User Authorization using JWT and Cookies
 3. NodeJS Express Routing
 4. Three user types:
-  1. Admins: responsible for basically everything
-  2. Ordering Staff: receive, track and update users' orders.
-  3. End-Users: Browse everything about the restaurants, place and track their orders.
+    1. Admins: responsible for basically everything
+    2. Ordering Staff: receive, track and update users' orders.
+    3. End-Users: Browse everything about the restaurants, place and track their orders.
 
 
   
