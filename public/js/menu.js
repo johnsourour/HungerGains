@@ -52,9 +52,10 @@ $("#cartForm").submit(function(event){
 
 // DO GET
 function ajaxGet(menu){
+
   var formData = {
-      restaurantName :  $("#rest").val(),
-      menuType :menu
+      restaurantName :  rest.value,
+      menuType : menu
     }
   $.ajax({
     type : "POST",
@@ -91,7 +92,7 @@ function ajaxGet(menu){
             });
             
             dd+="</select></td>"
-          dd+="<td><input type='number' style='width:40px;' id='"+id+"_q' placeholder='0'></input></td>" 
+          dd+="<td><input type='number' min=0 style='width:40px;' id='"+id+"_q' placeholder='0'></input></td>" 
           var cur_id = id+"_b"         
           dd+="<td><input type='text' id='"+id+"_c'> </input></td>"
           dd+="<td><button class='btn btn-primary' id='"+cur_id+"'> Add </button></td></tr>"
@@ -185,7 +186,7 @@ function removeItemPost(row){
     configName : configName, 
     itemName : itemName
   }
-  alert(JSON.stringify(formData))
+  //alert(JSON.stringify(formData))
    $.ajax({
         type : "POST",
         contentType : "application/json",
@@ -235,7 +236,7 @@ function ajaxCreateCart(){
         "<th scope='col'>Comment</th> <th scope='col'>Quantity</th><th scope='col'></th></tr> </thead><tbody id='cartItems'> </tbody> </table>" +
         "<div class='container py-1'><button class=' form-control btn btn-primary' id='calcOrder'>Calculate Total</button></div>"+
         "<div id='calcRes'></div><div class='container py-1'><button type='submit'"+
-        " class='form-control btn btn-success' id='placeOrder'>Place Order</button></div>");
+        " class='form-control btn btn-warning' id='placeOrder'>Place Order</button></div>");
   
         },
         error : function(e) {
@@ -284,7 +285,7 @@ function calcOrderPost(){
         data : JSON.stringify(formData),
         dataType : 'json',
         success: function(result){
-          alert(JSON.stringify(result[0]))
+          //alert(JSON.stringify(result[0]))
           $('#calcRes').empty();
           $('#calcRes').html("<div class='container'><p> Total = "+result[0].total+"</p></div>");
           

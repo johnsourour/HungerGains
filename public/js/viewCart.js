@@ -1,32 +1,26 @@
 
 
 $( document ).ready(function() {
-
-$("#refresh").click(function(event){
-  
-  event.preventDefault();
-  ajaxGet();
-});
-$(document).on("click", 'button[id$="_ch"]', function(){
-   //event.preventDefault();
-  changeStatusPost(this);
-})
-
+      ajaxGet();
+      $("#refresh").click(function(event){
+        
+        event.preventDefault();
+        ajaxGet();
+      });
 // DO GET
 function ajaxGet(){
   
   $.ajax({
     type : "POST",
-    contentType : "application/json",
+    contentType: "application/json",
     data : JSON.stringify({}),
     dataType : 'json',
-    url : window.location.origin + "/staff/viewOrders",
+    url : window.location.origin + "/user/restaurant/menu/getCart/"+cartID.value,
     success: function(result){
      
-
-      $('#tracking').empty();
+      $('#items').empty();
       $.each(result, function(i, order){
-
+       
         var formData = {
           restaurantID : order.restaurantID
         }
@@ -37,23 +31,14 @@ function ajaxGet(){
           dataType: 'json',
           url : window.location.origin + "/user/getName",
           success: function(result){
-             var dd="";
-            var button_id = order.cartID.toString()+'_ch'
-            var select_id = order.cartID.toString()+'_s'
             var restName=result[0].restaurantName
-            dd+="<tr> <th scope='row'>"+order.cartID + "</th> <td> "+restName+ "</td><td> "+order.orderedByName + "</td><td> "+order.statusName + "</td>"
-            dd+="<td> <select id ='"+select_id+"'> <option value='Received'>Received</option>"
-            dd+="<option value='Preparing'>Preparing</option>"
-            dd+="<option value='Out For Delivery'>Out For Delivery</option>"
-            dd+="<option value='Delivered'>Delivered</option>"
-            dd+="<option value='Cancelled'>Cancelled</option></td>"
-            dd+="<td> <button class= 'btn btn-success' id= '"+button_id+"'> Submit</button></td>"+
-            "<td><a class = 'btn btn-primary' href='/user/restaurant/menu/getCart/"+order.cartID+"'> View Details</a></td></tr>"
-            $('#tracking').append(dd)
-            $("#"+select_id).val(order.statusName)
+            $('#items').append("<tr> <th scope='row'>"+restName+ "</th> <td> "+order.menuType+ "</td><td> "+
+            order.menuItemName + "</td><td> "+order.configName + "</td><td> "+order.quantity + "</td><td> "
+            +order.comment + "</td></tr>")
+        
           },
           error : function(e) {
-            
+            alert("err")
             console.log("ERROR: ", e);
           }
         })
@@ -62,10 +47,29 @@ function ajaxGet(){
       console.log("Success: ", result);
     },
     error : function(e) {
-      $("#searchResults").html("<strong>Error</strong>");
+      
       console.log("ERROR: ", e);
     }
   }); 
+
+  $.ajax({
+    type : "POST",
+    contentType : 'application/json',
+    data : JSON.stringify({cartID:cartID.value}),
+    dataType : 'json',
+    url : window.location.origin + "/user/restaurant/menu/getCartTotal/",
+    success: function(result){
+     
+
+      $('#total').empty();
+     $('#total').html("<p>Total: "+ result[0].total+"</p>");
+      console.log("Success: ", result);
+    },
+    error : function(e) {
+      
+      console.log("ERROR: ", e);
+    }
+  });
 } 
 
 

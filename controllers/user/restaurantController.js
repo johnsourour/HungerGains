@@ -6,7 +6,8 @@ var path = require('path')
 var verifyToken = require((path.resolve('')+'/verifyToken'))
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
-
+var pp = require('path');
+var path= pp.resolve('./views');
 function CheckActive(value){
   if(value== null || value==undefined)
     return "starthour=starthour";
@@ -37,8 +38,8 @@ router.post('/items', verifyToken.verifyToken,function (req, res) {
       }else {
         restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
-        var sql2 = "select I.* from restaurantmenu M, restaurantMenuItem I where M.restaurantID = I.restaurantID "+
-        "and M.menuType=I.menutype and I.menuType= " + menuType + " and "+time;
+        var sql2 = "select I.* from restaurantmenu M, restaurantMenuItem I where M.restaurantID = I.restaurantID and I.restaurantID = "+
+        restaurantID + " and M.menuType=I.menutype and I.menuType= " + menuType + " and "+time;
          db.mycon.query(sql2, function (err, result) {
             console.log(sql2+"\nResult: " + JSON.stringify(result));
             if(err){
@@ -204,13 +205,29 @@ router.post('/menu/removeFromCart', function (req, res) {
 });
 
 
-router.get('/menu/getCart', function (req, res) {
+router.get('/menu/getCart/:cartID', function (req, res) {
   console.log("got cart"); 
   
 
-  var cartID = cur_cart
+  var cartID = req.params["cartID"]
+  var sql = "select * from CartItem where cartID ="+cartID;
+    db.mycon.query(sql, function (err, result) {
+        console.log("Result: " + JSON.stringify(result));
+      if(err){
+        res.redirect("/404");
+
+      }else {
+        res.render(path+"/viewCart.html",{cartID:cartID});
+      }
+        });
+});
+
+router.post('/menu/getCart/:cartID', function (req, res) {
+  console.log("got cart"); 
   
-  var sql = "select * from CartItem where cartID ="+cartID+";"
+
+  var cartID = req.params["cartID"]
+  var sql = "select * from CartItem where cartID ="+cartID;
     db.mycon.query(sql, function (err, result) {
         console.log("Result: " + JSON.stringify(result));
       if(err){
@@ -222,7 +239,7 @@ router.get('/menu/getCart', function (req, res) {
         });
 });
 router.post('/menu/getCartTotal', function (req, res) {
-  console.log("got cart"); 
+  console.log("got cart  total"); 
   
 
   var cartID = req.body.cartID

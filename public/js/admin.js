@@ -87,6 +87,57 @@ $( document ).ready(function() {
     });
 
 
+     $("#aif").submit(function(event) {
+    event.preventDefault();
+    
+    ajaxAddMenuItem(this.id)
+  });
+
+
+  $("#mif").submit(function(event) {
+    event.preventDefault();
+  
+    ajaxAddMenuItem(this.id)
+  });
+
+  $("#rif").submit(function(event) {
+      event.preventDefault();
+    
+      ajaxRemoveMenuItem(this.id)
+    });
+
+ $("#aic").submit(function(event) {
+    event.preventDefault();
+    
+    ajaxMenuItemConfig(this.id)
+  });
+
+  $("#ric").submit(function(event) {
+      event.preventDefault();
+    
+      ajaxMenuItemConfig(this.id)
+    });
+
+    $("#adc").submit(function(event) {
+    event.preventDefault();
+    
+    ajaxAddDiscount(this.id)
+  });
+
+
+  $("#mdc").submit(function(event) {
+    event.preventDefault();
+  
+    ajaxAddDiscount(this.id)
+  });
+
+  $("#rdc").submit(function(event) {
+      event.preventDefault();
+    
+      ajaxRemoveDiscount(this.id)
+    });
+
+
 
   $("[id^='admins_select_']").click(function(event){
        ajaxSelectUsers(this.id, "admins")
@@ -401,7 +452,7 @@ $( document ).ready(function() {
         success : function(response) {
         var res = "res_"+id;
        // alert(response.errno)
-        if(response.errno){
+        if(response.errno || response.affectedRows==0){
             $("#"+res).empty();
             $("#"+res).html("<p>Something went wrong!<p>")
         }
@@ -461,6 +512,256 @@ $( document ).ready(function() {
       });
     }
 
+    function ajaxAddMenuItem(id){
+      
+      // PREPARE FORM DATA
+      
+      var url;
+      var restaurantName = $("#rests_select_"+id).val();
+      var menuType = $("#select_mtype_"+id).val();
+      var itemName = $("#in_"+id).val();
+      var basePrice = $("#bp_"+id).val();
+    
+      if(id=='aif'){
+        url = window.location.origin+"/admin/restaurant/menu/addItem"
+        
+      }
+      else{
+        url = window.location.origin+"/admin/restaurant/menu/modifyItem"
+      }
+      
+      var formData = {
+        restaurantName : restaurantName,
+        menuType : menuType,
+        itemName : itemName,
+        basePrice : basePrice
+      }
+      
+      
+      // DO POST
+      $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success : function(response) {
+        var res = "res_"+id;
+       // alert(response.errno)
+        if(response.errno || response.affectedRows == 0){
+            $("#"+res).empty();
+            $("#"+res).html("<p>Something went wrong!<p>")
+        }
+        else{
+         $("#"+res).empty();
+         $("#"+res).html("<p>Done!<p>")
+        }
+        
+        },
+        error : function(e) {
+          alert("Something went wrong!")
+          console.log("ERROR: ", e);
+        }
+      });
+    }
+
+     function ajaxRemoveMenuItem(id){
+      
+      // PREPARE FORM DATA
+      var url;
+      var restaurantName = $("#rests_select_"+id).val();
+      var menuType = $("#select_mtype_"+id).val();
+      var itemName = $("#in_"+id).val();
+      url = window.location.origin+"/admin/restaurant/menu/removeItem"
+      
+      
+      var formData = {
+        restaurantName : restaurantName,
+        menuType : menuType,
+        itemName : itemName
+      }
+      //alert(JSON.stringify(formData))
+      
+      
+      // DO POST
+      $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success : function(response) {
+        var res = "res_"+id;
+       // alert(response.errno)
+        if(response.errno){
+            $("#"+res).empty();
+            $("#"+res).html("<p>Something went wrong!<p>")
+        }
+        else{
+         $("#"+res).empty();
+         $("#"+res).html("<p>Done!<p>")
+        }
+        
+        },
+        error : function(e) {
+          alert("Something went wrong!")
+          console.log("ERROR: ", e);
+        }
+      });
+    }
+
+    function ajaxMenuItemConfig(id){
+      
+      // PREPARE FORM DATA
+      
+      var url;
+      var restaurantName = $("#rests_select_"+id).val();
+      var menuType = $("#select_mtype_"+id).val();
+      var itemName = $("#in_"+id).val();
+      var configName = $("#select_cn_"+id).val();
+    
+      if(id=='aic'){
+        url = window.location.origin+"/admin/restaurant/menu/addItemConfig"
+        
+      }
+      else{
+        url = window.location.origin+"/admin/restaurant/menu/removeItemConfig"
+      }
+      
+      var formData = {
+        restaurantName : restaurantName,
+        menuType : menuType,
+        itemName : itemName,
+        configName : configName
+      }
+      
+      
+      // DO POST
+      $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success : function(response) {
+        var res = "res_"+id;
+       // alert(response.errno)
+        if(response.errno || response.affectedRows == 0){
+            $("#"+res).empty();
+            $("#"+res).html("<p>Something went wrong!<p>")
+        }
+        else{
+         $("#"+res).empty();
+         $("#"+res).html("<p>Done!<p>")
+        }
+        
+        },
+        error : function(e) {
+          alert("Something went wrong!")
+          console.log("ERROR: ", e);
+        }
+      });
+    }
+
+    function ajaxAddDiscount(id){
+      
+      // PREPARE FORM DATA
+      
+      var url;
+      var discountCode = $("#code_"+id).val();
+      var day = $("#day_"+id).val();
+      var month = $("#month_"+id).val();
+      var year = $("#year_"+id).val();
+      var rate = $("#rate_"+id).val();
+    
+      if(id=='adc'){
+        url = window.location.origin+"/admin/discount/add"
+        
+      }
+      else{
+        url = window.location.origin+"/admin/discount/modify"
+      }
+      
+      var formData = {
+        discountCode : discountCode,
+        day : day,
+        month : month,
+        year : year,
+        rate : rate
+      }
+      
+      
+      // DO POST
+      $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'text',
+        success : function(response) {
+        var res = "res_"+id;
+       // alert(response.errno)
+        if(response=="no"){
+            $("#"+res).empty();
+            $("#"+res).html("<p>Something went wrong!<p>")
+        }
+        else if(response=="inv"){
+          $("#"+res).empty();
+            $("#"+res).html("<p>Invalid rate (should be between 0 and 1)!<p>")
+        }
+        else{
+         $("#"+res).empty();
+         $("#"+res).html("<p>Done!<p>")
+        }
+        
+        },
+        error : function(e) {
+          alert("Something went wrong!")
+          console.log("ERROR: ", e);
+        }
+      });
+    }
+
+     function ajaxRemoveDiscount(id){
+      
+      // PREPARE FORM DATA
+      var url;
+      var discountCode = $("#codes_select_"+id).val();
+      url = window.location.origin+"/admin/discount/remove"
+      
+      
+      var formData = {
+        discountCode : discountCode
+      }
+      //alert(JSON.stringify(formData))
+      
+      
+      // DO POST
+      $.ajax({
+        type : "POST",
+        contentType : "application/json",
+        url : url,
+        data : JSON.stringify(formData),
+        dataType : 'json',
+        success : function(response) {
+        var res = "res_"+id;
+       // alert(response.errno)
+        if(response.errno){
+            $("#"+res).empty();
+            $("#"+res).html("<p>Something went wrong!<p>")
+        }
+        else{
+         $("#"+res).empty();
+         $("#"+res).html("<p>Done!<p>")
+        }
+        
+        },
+        error : function(e) {
+          alert("Something went wrong!")
+          console.log("ERROR: ", e);
+        }
+      });
+    }
     
 
 

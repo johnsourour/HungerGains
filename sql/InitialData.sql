@@ -110,11 +110,11 @@ VALUES('Combo - Large', 1.25);
 
 
 Insert into user
-Values('johnuser', 'end_user', '88172381238', 'user@email', 'john', 'user', 'userpwd', null, 'alive');
+Values('johnuser', 'end_user', '88172381238', 'user@email', 'john', 'user', 'userpwd', '2001-01-15', 'alive');
 Insert into user
-Values('johnstaff', 'staff', '82381238', 'usser@email', 'john', 'user', 'staff', null, 'alive');
+Values('johnstaff', 'staff', '82381238', 'usser@email', 'john', 'user', 'staff', '2001-01-15', 'alive');
 Insert into user
-Values('johnadmin', 'admin', '55381238', 'admin@email', 'john', 'admin', 'adminpwd', null, 'alive');
+Values('johnadmin', 'admin', '55381238', 'admin@email', 'john', 'admin', 'adminpwd', '2001-01-15', 'alive');
 
 Insert into user
 Values('johnlegit', 'admin', '01281583389', 'johnsourour@gmail.com', 'john', 'admin', 'forgottenpwd', null, 'alive');

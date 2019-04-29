@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="/js/staff.js"></script>
+  <script src="/js/viewCart.js"></script>
   
 </head>
 <body>
@@ -34,28 +34,29 @@
             </li>
           </ul>
         </nav>
-      <div id="test"></div>
+        <input id="cartID" value={{cartID}} hidden></input>
     <div class="container py-5 ">
         <div class="col bg-ligh">
           <!-- start of col 1  -->
-          <h2>Tracking Orders</h2>
+          <h2>Cart Number #{{cartID}}</h2>
           <button id="refresh">Refresh</button>  
           
            <table class="container py-5 table">
               <thead>
                 <tr>
-                  <th scope="col">CartID</th>
                   <th scope="col">Restaurant Name</th>
-                  <th scope="col">User</th>
-                  <th scope="col">Status</th>
-                  <th scope="col">Change Status</th>
-                  <th scope="col"> </th>
+                  <th scope="col">Menu Type</th>
+                  <th scope="col">Item Name</th>
+                  <th scope="col">Configuration </th>
+                  <th scope="col">Quantity</th>
+                  <th scope="col">Comment</th>
                 </tr>
               </thead>
             
-              <tbody id="tracking">
+              <tbody id="items">
               </tbody>
             </table>
+            <div class= "container py-5" id="total"></div>
           <!-- end of col 1  -->
         </div>
         

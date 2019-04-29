@@ -118,6 +118,76 @@ app.get("/admin", function(req,res){
 
 });
 
+app.get("/manageOthers", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='admin'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.render(path+"/admin_users.html", {user:decoded.user})
+    }
+
+ })
+
+});
+
+
+app.get("/manageMenus", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='admin'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.render(path+"/admin_menus.html", {user:decoded.user})
+    }
+
+ })
+
+});
+
+
+
+app.get("/manageRests", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='admin'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.render(path+"/admin_restaurants.html", {user:decoded.user})
+    }
+
+ })
+
+});
+
+
+app.get("/manageDiscounts", function(req,res){  
+ var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
+    if(decoded.type==undefined)
+      res.redirect("/")
+    else if(decoded.type!='admin'){
+      res.redirect("/denied")
+    }
+    else {
+      res.cookie("user", decoded.user);
+      res.render(path+"/admin_discounts.html", {user:decoded.user})
+    }
+
+ })
+
+});
+
+
+
 app.get("/profile", function(req,res){  
  var user = verifyToken.getUserInfo(req.cookies["cookieToken"], function(decoded){
     if(decoded.type==undefined)
@@ -129,6 +199,8 @@ app.get("/profile", function(req,res){
  })
 
 });
+
+
 
 
 app.get("/logout" , function(req,res){  

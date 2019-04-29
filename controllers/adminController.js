@@ -5,7 +5,8 @@ var db = require('../db');
 var app = express();
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
-
+var pp = require('path');
+var path= pp.resolve('./views');
 
 router.get('/admins', function (req, res) {
   var current_admin = db.NullCheckChar(req.cookies["user"])
@@ -224,6 +225,8 @@ router.get('/all_logs', function (req, res) {
     }
   });
 });
+
+
 
 //importing admin controllers
 var restaurantController = require('./admin/restaurantController');

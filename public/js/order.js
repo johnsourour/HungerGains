@@ -52,7 +52,8 @@ function ajaxGet(){
           success: function(result){
             var dd="";
             var restName=result[0].restaurantName
-            dd+="<tr> <th scope='row'>"+myorder.cartID + "</th> <td> "+restName+ "</td><td> "+myorder.statusName + "</td></tr>"
+            dd+="<tr> <th scope='row'>"+myorder.cartID + "</th> <td> "+restName+ "</td><td> "+myorder.statusName + "</td>"+
+            "<td><a class ='btn btn-success' href='/user/restaurant/menu/getCart/"+myorder.cartID+"'> View Details</a></td></tr>"
            $('#orders').append(dd)
           },
           error : function(e) {

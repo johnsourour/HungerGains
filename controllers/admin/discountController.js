@@ -10,75 +10,55 @@ router.use(bodyParser.json());
 router.post('/add', function (req, res) {
   console.log("got post request add discount"); 
   
-  let code = db.NullCheckChar(req.body.discount_code)
+  let code = db.NullCheckChar(req.body.discountCode)
   let date =  db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
   let rate = req.body.rate
   
-  if(rate<0 || rate>1)res.send("invalid rate");
+  if(rate<0 || rate>1)res.send("inv");
   
   let sql = "insert into discount values ( " + code+ "," + date + "," + rate +")"
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
-      res.send(err);
+      res.send("no");
     }else {
-      res.json(result);  
+      res.send("ok");  
     }
       });
   });
 
-//update discount rate
- router.post('/updateRate', function (req, res) {
+ router.post('/modify', function (req, res) {
   console.log("got post request update discount rate"); 
   
-  let code =  db.NullCheckChar(req.body.discount_code)
+  let code =  req.body.discountCode
+  let date =  db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
   let rate = req.body.rate
 
-  if(rate<0 || rate>1)res.send("invalid rate");
+  if(rate<0 || rate>1)res.send("inv");
 
-  let sql = "update discount set rate = " + rate + "  where discountID = " + code;
+  let sql = "update discount set rate = " + rate + ", expiryDate = "+ date+" where discountID = " + code;
   console.log(sql);
   db.mycon.query(sql, function (err, result) {
     console.log("Result: " + JSON.stringify(result));
     if(err){
-      res.send(err);
+      res.send("no");
     }else {
-      res.json(result);  
+      res.send("ok");  
     }
       });
   });
 
-  //update discount expiry
- router.post('/updateExpiry', function (req, res) {
-  console.log("got post request update discount expiry"); 
-  
-  let code =  db.NullCheckChar(req.body.discount_code)
-  let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year )
-  let sql = "update discount set expiryDate = " + date + "  where discountID = " + code;
-  db.mycon.query(sql, function (err, result) {
-    
-    console.log("Result: " + JSON.stringify(result));
-    if(err){
-      res.send(err);
-    }else {
-      res.json(result);  
-    }
-      });
-  });  
-
-
-//remove discount by code
  router.post('/remove', function (req, res) {
-  console.log("got post request add discount"); 
+  console.log("got post request remove discount"); 
   
-  let code = req.body.discount_code
+  let code = req.body.discountCode
   let sql = "delete from discount where discountID = " + code;
   db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
+    console.log(sql+"Result: " + JSON.stringify(result));
     if(err){
       res.send(err);
     }else {
-      res.json(result);  
+      res.send(result);  
     }
       });
   }); 

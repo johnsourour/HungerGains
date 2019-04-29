@@ -141,7 +141,7 @@ router.post('/addItem', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
@@ -170,7 +170,7 @@ router.post('/modifyItem', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
@@ -199,7 +199,7 @@ router.post('/removeItem', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
@@ -257,7 +257,7 @@ router.post('/addItemConfig', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
@@ -286,7 +286,7 @@ router.post('/removeItemConfig', function (req, res) {
             if(err){
               res.send(err);
             }else {
-              res.send("Success");
+              res.send(result);
             }
               });
       }
