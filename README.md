@@ -7,8 +7,8 @@ Basic online food ordering website with simple Bootstrap 4 UI, NodeJS and MySQL 
 
 # How To run
 ```
-* npm install
-* configure db.js to your database (my schema and data attached)
+1. npm install
+2. configure db.js to your database (my schema and data attached)
 ```
 
 # Features
