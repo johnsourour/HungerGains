@@ -1,7 +1,7 @@
-# HungerGains Online Food Ordering Website  - NodeJS/MySQL
+# HungerGains
 
 ```
-Basic food ordering website for different restaurants with different delivery areas and menu items with different configurations
+Basic online food ordering website with simple Bootstrap 4 UI, NodeJS and MySQL Database.
 ```
 
 
