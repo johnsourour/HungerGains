@@ -12,10 +12,10 @@ var pp = require('path');
 var path= pp.resolve('./views');
 
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: 'email provider here',
   auth: {
-    user: 'hungergains19@gmail.com',
-    pass: 'HG_2019_JohnS'
+    user: 'email here',
+    pass: 'password here'
   }
 });
 
