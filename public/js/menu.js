@@ -1,6 +1,6 @@
 
 $( document ).ready(function() {
-  
+  rest.value = rest.value.replace(/_/g,' ')
   $("#menuSelect").change(function() {
     
     ajaxGet($("input[name='msel']:checked").val());
@@ -52,7 +52,8 @@ $("#cartForm").submit(function(event){
 
 // DO GET
 function ajaxGet(menu){
-
+  
+  //alert(restaurantName)
   var formData = {
       restaurantName :  rest.value,
       menuType : menu
@@ -68,7 +69,7 @@ function ajaxGet(menu){
       $.each(result, function(i, item){
         
         var formData2 ={ 
-           restaurantName : $("#rest").val(),
+           restaurantName : rest.value,
            menuType : menu, 
            itemName : item.menuItemName
         }

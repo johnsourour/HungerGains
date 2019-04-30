@@ -75,14 +75,13 @@ router.post('/changeInfo', function (req, res) {
   
   let username = db.NullCheckChar(req.body.username)
   //let password = db.NullCheckChar(bcrypt.hashSync(req.body.password, 8)) 
-  let password = db.NullCheckChar(req.body.password) 
-  let userType = "'end_user'"
+  let password = db.NullCheckChar(req.body.password)
   let phoneNo = db.NullCheckChar(req.body.phoneNo)
   let email = db.NullCheckChar(req.body.email)
   let Fname = db.NullCheckChar(req.body.Fname)
   let Lname = db.NullCheckChar(req.body.Lname)  
   let date = db.NullCheckDate(req.body.day, req.body.month, req.body.year ) 
-  let sql = "update user set usertype=" + userType+ " , phoneNo=" +  phoneNo+ " , email=" +
+  let sql = "update user set  phoneNo=" +  phoneNo+ " , email=" +
            email + " , Fname=" + Fname + " , Lname=" + Lname + " , hashedPwd=" + password + " , Bdate=" + date +
            " where username =" + username;
   db.mycon.query(sql, function (err, result) {
@@ -214,15 +213,7 @@ router.get('/myOrders/:user', function (req, res) {
     {
       res.redirect("/404");
     }
-    var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)
-    db.mycon.query(sql, function (err, result) {
-      console.log(sql, "Result: " + JSON.stringify(result));
-      if(err){
-        res.send(err);
-      }else {
-        res.render(path+"/order.html", {user:cur_user});
-      }
-        });
+    res.render(path+"/order.html", {user:cur_user});
 });
 router.post('/myOrders/:user', function (req, res) {
   var cur_user = req.params["user"]
@@ -230,7 +221,7 @@ router.post('/myOrders/:user', function (req, res) {
   {
     res.redirect("/404");
   }
-  var sql = "Select * from cart where orderedByName = "+db.NullCheckChar(cur_user)+" order by CartId"
+  var sql = "Select * from cart where statusName not in ('Pending') and orderedByName = "+db.NullCheckChar(cur_user)+" order by CartId"
   db.mycon.query(sql, function (err, result) {
     console.log(sql, "Result: " + JSON.stringify(result));
     if(err){
@@ -282,7 +273,8 @@ router.get('/restaurantMenu/:name', verifyToken.verifyToken,function (req, res) 
     if(err){
       res.send(err);
     }else {
-      res.render(path+"/menu.html",{rest:req.params["name"]})
+      var rest = req.params["name"].replace(/\s/g, '_')
+      res.render(path+"/menu.html",{rest:rest})
     }
       });
   });

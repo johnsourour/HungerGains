@@ -213,6 +213,7 @@ router.post('/RemoveStaff', function (req, res) {
   });
 
 router.get('/all_logs', function (req, res) {
+
   console.log("got get request all logs"); 
   let sql = "select * from log";
   db.mycon.query(sql, function (err, result) {

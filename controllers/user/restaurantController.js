@@ -93,8 +93,8 @@ router.post('/menu/createCart', function (req, res) {
   var address = db.NullCheckChar(req.body.address);
   var restaurantName = db.NullCheckChar(req.body.restaurantName);
   var discountID = req.body.discountID
-  if(discountID==undefined) 
-      discountID = null
+  if(discountID==undefined || discountID==null || discountID=='') 
+      discountID = "NULL"
   var sql = "select restaurantID from restaurant where restaurantName="+restaurantName+";";
   db.mycon.query(sql, function (err, result) {
       console.log("Result: " + JSON.stringify(result));
@@ -104,8 +104,8 @@ router.post('/menu/createCart', function (req, res) {
       }else {
         restaurantID=result[0].restaurantID
         console.log("got id: "+restaurantID);
-        var sql2 = "select userAddNo from UserAddress where username="+cur_user+" and areaName =" + areaName +
-        " and addressLine1 = "+ address;
+        var sql2 = "select userAddNo from UserAddress where username="+cur_user+" and areaName =" + areaName
+        + " and addressLine1 = "+ address;
         db.mycon.query(sql2, function (err, result) {
             console.log("Result: " + JSON.stringify(result));
             if(err){
@@ -116,7 +116,7 @@ router.post('/menu/createCart', function (req, res) {
               console.log("got id: "+restaurantID);
               var sql3 = "insert into Cart values(null, "+cur_user+", "+ address_num+","+restaurantID+","+discountID+", 'Pending');";
               db.mycon.query(sql3, function (err, result) {
-                  console.log("Result: " + JSON.stringify(result));
+                  console.log(sql3+"Result: " + JSON.stringify(result));
                   if(err){
                     res.send(err);
                   }else {
