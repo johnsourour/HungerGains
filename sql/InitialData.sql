@@ -116,8 +116,6 @@ Values('johnstaff', 'staff', '82381238', 'usser@email', 'john', 'user', '123', '
 Insert into user
 Values('johnadmin', 'admin', '55381238', 'admin@email', 'john', 'admin', '123', '2001-01-15', 'alive');
 
-Insert into user
-Values('johnlegit', 'admin', '01281583389', 'johnsourour@gmail.com', 'john', 'admin', 'forgottenpwd', null, 'alive');
 
 INSERT INTO Restaurant
 VALUES(null, 'McDonalds', 'American', 7, 'a McStreet number', 0.13, '093000', '230000');
