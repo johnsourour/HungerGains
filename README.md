@@ -21,7 +21,7 @@ Basic online food ordering website with simple Bootstrap 4 UI, NodeJS and MySQL 
     1.  Admins: responsible for basically everything
     2.  Ordering Staff: receive, track and update users' orders.
     3.  End-Users: Browse everything about the restaurants, place and track their orders.
-
+5. Unfinished UI
 
   
   
